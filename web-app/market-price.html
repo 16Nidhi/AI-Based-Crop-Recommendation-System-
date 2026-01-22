@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Prices - AgriSmart</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">🌾 AgriSmart</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="crop-recommendation.html">Crop Recommendation</a></li>
+                <li><a href="disease-detection.html">Disease Detection</a></li>
+                <li><a href="weather.html">Weather</a></li>
+                <li><a href="market-price.html">Market Prices</a></li>
+                <li><a href="chatbot.html">Chatbot</a></li>
+                <li><a href="profile.html">Profile</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>💰 Market Price Tracking</h1>
+            <p>Real-time crop prices and market trend analysis</p>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="result-card">
+                <h2>Select Crop</h2>
+                <div class="form-group">
+                    <select id="crop-select">
+                        <option value="wheat">Wheat</option>
+                        <option value="rice">Rice</option>
+                        <option value="maize">Maize</option>
+                        <option value="cotton">Cotton</option>
+                        <option value="soybean">Soybean</option>
+                        <option value="sugarcane">Sugarcane</option>
+                        <option value="potato">Potato</option>
+                        <option value="onion">Onion</option>
+                        <option value="tomato">Tomato</option>
+                        <option value="pulses">Pulses</option>
+                    </select>
+                    <button id="search-prices" class="btn btn-primary" style="margin-top: 1rem;">View Prices</button>
+                </div>
+            </div>
+
+            <div id="price-display"></div>
+
+            <div class="result-card">
+                <h3>💡 Price Insights</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>Best Selling Markets</h4>
+                        <p>Mumbai APMC: ₹2,450/quintal</p>
+                        <p>Delhi Azadpur: ₹2,380/quintal</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Price Alerts</h4>
+                        <p>Wheat prices up 5% this week</p>
+                        <p>Cotton demand increasing in South</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Demand Forecast</h4>
+                        <p>High demand expected for Rabi crops</p>
+                        <p>Export opportunities for pulses</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Profit Calculator</h4>
+                        <p>Estimated profit: ₹45,000/acre</p>
+                        <p>ROI: 35% for current season</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 AgriSmart. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="api.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
