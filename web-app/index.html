@@ -12,12 +12,19 @@
             <div class="logo">🌾 AgriSmart</div>
             <ul class="nav-menu">
                 <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
                 <li><a href="crop-recommendation.html">Crop Recommendation</a></li>
                 <li><a href="disease-detection.html">Disease Detection</a></li>
                 <li><a href="weather.html">Weather</a></li>
                 <li><a href="market-price.html">Market Prices</a></li>
                 <li><a href="chatbot.html">Chatbot</a></li>
+                <li><a href="history.html">History</a></li>
+                <li><a href="settings.html">Settings</a></li>
                 <li><a href="profile.html">Profile</a></li>
+                <li class="auth-section">
+                    <a href="login.html" id="login-btn">Login</a>
+                    <a href="#" id="logout-btn" style="display: none;">Logout</a>
+                </li>
             </ul>
         </div>
     </nav>
@@ -71,7 +78,19 @@
                     <div class="feature-icon">📊</div>
                     <h3>Analytics Dashboard</h3>
                     <p>Track performance, yields, and profitability metrics</p>
-                    <a href="profile.html" class="btn-link">Learn More →</a>
+                    <a href="dashboard.html" class="btn-link">Learn More →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📋</div>
+                    <h3>History Tracking</h3>
+                    <p>View past recommendations and track farming decisions</p>
+                    <a href="history.html" class="btn-link">Learn More →</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚙️</div>
+                    <h3>Settings & Preferences</h3>
+                    <p>Customize your farming preferences and notifications</p>
+                    <a href="settings.html" class="btn-link">Learn More →</a>
                 </div>
             </div>
         </div>
@@ -106,6 +125,45 @@
         </div>
     </footer>
 
+    <script src="config.js"></script>
+    <script src="utils.js"></script>
+    <script src="mobile-bridge.js"></script>
+    <script src="api.js"></script>
     <script src="main.js"></script>
+    <script src="system-interconnection.js"></script>
+    <script>
+        // Initialize authentication check
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            loadUserProfile();
+        });
+        
+        function checkAuthStatus() {
+            const user = StorageManager.getUser();
+            const loginBtn = document.getElementById('login-btn');
+            const logoutBtn = document.getElementById('logout-btn');
+            
+            if (user) {
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (logoutBtn) {
+                    logoutBtn.style.display = 'block';
+                    logoutBtn.onclick = () => {
+                        StorageManager.removeUser();
+                        StorageManager.removeToken();
+                        window.location.href = 'login.html';
+                    };
+                }
+            }
+        }
+        
+        function loadUserProfile() {
+            const user = StorageManager.getUser();
+            if (user) {
+                // Update UI with user info
+                const userElements = document.querySelectorAll('.user-name');
+                userElements.forEach(el => el.textContent = user.name);
+            }
+        }
+    </script>
 </body>
 </html>

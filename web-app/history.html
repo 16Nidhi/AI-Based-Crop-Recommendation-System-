@@ -139,6 +139,25 @@
                 <li><a href="disease-detection.html">Disease Detection</a></li>
                 <li><a href="weather.html">Weather</a></li>
                 <li><a href="market-price.html">Market Prices</a></li>
+                <li><a href="chatbot.html">Chatbot</a></li>
+                <li><a href="history.html" class="active">History</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li class="auth-section">
+                    <span class="user-name">User</span>
+                    <a href="#" id="logout-btn">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+            <div class="logo">🌾 AgriSmart</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="crop-recommendation.html">Crop Recommendation</a></li>
+                <li><a href="disease-detection.html">Disease Detection</a></li>
+                <li><a href="weather.html">Weather</a></li>
+                <li><a href="market-price.html">Market Prices</a></li>
                 <li><a href="history.html" class="active">History</a></li>
                 <li><a href="profile.html">Profile</a></li>
             </ul>
@@ -318,6 +337,219 @@
                     <div class="feature-card">
                         <div class="feature-icon">📈</div>
                         <h4>Price Checks</h4>
+                        <p><strong>23</strong> market price queries</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 AgriSmart. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="utils.js"></script>
+    <script src="mobile-bridge.js"></script>
+    <script src="api.js"></script>
+    <script src="main.js"></script>
+    <script src="system-interconnection.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeHistory();
+        });
+        
+        function initializeHistory() {
+            checkAuthStatus();
+            loadUserProfile();
+            loadHistoryData();
+            setupHistoryFilters();
+        }
+        
+        function checkAuthStatus() {
+            const user = StorageManager.getUser();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Setup logout
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.onclick = () => {
+                    StorageManager.removeUser();
+                    StorageManager.removeToken();
+                    window.location.href = 'login.html';
+                };
+            }
+        }
+        
+        function loadUserProfile() {
+            const user = StorageManager.getUser();
+            if (user) {
+                document.querySelectorAll('.user-name').forEach(el => {
+                    el.textContent = user.name || 'Farmer';
+                });
+            }
+        }
+        
+        function loadHistoryData() {
+            const history = StorageManager.getHistory();
+            const historyContainer = document.getElementById('history-container');
+            
+            if (!historyContainer) return;
+            
+            if (history.length === 0) {
+                historyContainer.innerHTML = `
+                    <div class="no-history">
+                        <h3>No History Yet</h3>
+                        <p>Start using AgriSmart features to see your activity history here.</p>
+                        <div class="quick-actions">
+                            <a href="crop-recommendation.html" class="btn btn-primary">Get Recommendations</a>
+                            <a href="disease-detection.html" class="btn btn-secondary">Detect Disease</a>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort by timestamp (newest first)
+            const sortedHistory = history.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            const historyHTML = sortedHistory.map(item => `
+                <div class="history-item" data-type="${item.type}" data-date="${new Date(item.timestamp).toISOString().split('T')[0]}">
+                    <div class="history-header">
+                        <h4>${getHistoryTitle(item)}</h4>
+                        <span class="history-date">${formatDate(item.timestamp)}</span>
+                    </div>
+                    <div class="history-content">
+                        <p><strong>Type:</strong> ${item.type}</p>
+                        ${item.crop ? `<p><strong>Crop:</strong> ${item.crop}</p>` : ''}
+                        ${item.disease ? `<p><strong>Disease:</strong> ${item.disease}</p>` : ''}
+                        ${item.location ? `<p><strong>Location:</strong> ${item.location}</p>` : ''}
+                        ${item.result ? `<p><strong>Result:</strong> ${item.result}</p>` : ''}
+                    </div>
+                    <div class="history-actions">
+                        <button onclick="viewHistoryDetails('${item.id}')" class="btn btn-sm">View Details</button>
+                        <button onclick="repeatAction('${item.id}')" class="btn btn-sm btn-secondary">Repeat</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            historyContainer.innerHTML = historyHTML;
+            
+            // Update statistics
+            updateHistoryStats(history);
+        }
+        
+        function getHistoryTitle(item) {
+            switch(item.type) {
+                case 'crop-recommendation': return `Crop Recommendation - ${item.crop || 'Unknown'}`;
+                case 'disease-detection': return `Disease Detection - ${item.disease || 'Analyzed'}`;
+                case 'weather-check': return `Weather Check - ${item.location || 'Location'}`;
+                case 'market-price': return `Market Price - ${item.crop || 'Commodity'}`;
+                case 'chatbot': return `Chatbot Consultation`;
+                default: return `${item.type} Activity`;
+            }
+        }
+        
+        function formatDate(timestamp) {
+            return new Date(timestamp).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        function setupHistoryFilters() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    const filter = this.dataset.filter;
+                    filterHistory(filter);
+                });
+            });
+        }
+        
+        function filterHistory(type) {
+            const historyItems = document.querySelectorAll('.history-item');
+            
+            historyItems.forEach(item => {
+                if (type === 'all' || item.dataset.type === type) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+        
+        function updateHistoryStats(history) {
+            const stats = {
+                recommendations: history.filter(h => h.type === 'crop-recommendation').length,
+                diseases: history.filter(h => h.type === 'disease-detection').length,
+                chats: history.filter(h => h.type === 'chatbot').length,
+                prices: history.filter(h => h.type === 'market-price').length
+            };
+            
+            // Update stat cards if they exist
+            const statCards = document.querySelectorAll('.feature-card p strong');
+            if (statCards.length >= 4) {
+                statCards[0].textContent = stats.recommendations;
+                statCards[1].textContent = stats.diseases;
+                statCards[2].textContent = stats.chats;
+                statCards[3].textContent = stats.prices;
+            }
+        }
+        
+        function viewHistoryDetails(itemId) {
+            const history = StorageManager.getHistory();
+            const item = history.find(h => h.id === itemId);
+            
+            if (!item) return;
+            
+            // Show modal or navigate to detailed view
+            alert(`History Details:\\n\\nType: ${item.type}\\nTimestamp: ${formatDate(item.timestamp)}\\n${JSON.stringify(item, null, 2)}`);
+        }
+        
+        function repeatAction(itemId) {
+            const history = StorageManager.getHistory();
+            const item = history.find(h => h.id === itemId);
+            
+            if (!item) return;
+            
+            // Navigate to appropriate page based on action type
+            switch(item.type) {
+                case 'crop-recommendation':
+                    window.location.href = 'crop-recommendation.html';
+                    break;
+                case 'disease-detection':
+                    window.location.href = 'disease-detection.html';
+                    break;
+                case 'weather-check':
+                    window.location.href = 'weather.html';
+                    break;
+                case 'market-price':
+                    window.location.href = 'market-price.html';
+                    break;
+                case 'chatbot':
+                    window.location.href = 'chatbot.html';
+                    break;
+                default:
+                    alert('Action cannot be repeated');
+            }
+        }
+    </script>
+</body>
+</html>
                         <p><strong>78</strong> market price lookups</p>
                     </div>
                 </div>

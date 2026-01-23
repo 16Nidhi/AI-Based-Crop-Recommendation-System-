@@ -4,8 +4,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function initializeApp() {
     const currentPage = window.location.pathname.split('/').pop();
+    
+    // Initialize common functionality
+    initCommonFeatures();
+    
+    // Load user data and update navigation
     loadUserData();
     
+    // Initialize page-specific functionality
     if (currentPage === 'crop-recommendation.html') {
         initCropRecommendation();
     } else if (currentPage === 'disease-detection.html') {
@@ -18,22 +24,84 @@ function initializeApp() {
         initChatbot();
     } else if (currentPage === 'profile.html') {
         initProfile();
+    } else if (currentPage === 'dashboard.html') {
+        initDashboard();
+    } else if (currentPage === 'history.html') {
+        initHistory();
+    } else if (currentPage === 'settings.html') {
+        initSettings();
+    } else if (currentPage === 'login.html') {
+        initLogin();
+    }
+    
+    // Track page visit
+    Analytics.trackAction('page_visit', { page: currentPage });
+}
+
+function initCommonFeatures() {
+    // Update navigation for all pages
+    Navigation.updateNavigation();
+    
+    // Setup mobile app integration
+    if (CrossPlatform.isMobileApp()) {
+        document.body.classList.add('mobile-app');
+        CrossPlatform.syncWithMobile();
+    }
+    
+    // Setup offline indicators
+    setupOfflineIndicators();
+    
+    // Check for page data
+    const pageData = Navigation.getPageData();
+    if (pageData) {
+        handlePageData(pageData);
     }
 }
 
 function loadUserData() {
-    const userData = localStorage.getItem('agrismart_user');
+    const userData = StorageManager.getUser();
     if (userData) {
-        const user = JSON.parse(userData);
-        updateUserInterface(user);
+        updateUserInterface(userData);
+        // Auto-sync with mobile if available
+        if (CrossPlatform.isMobileApp()) {
+            CrossPlatform.syncWithMobile();
+        }
+    } else {
+        // If not on login page and no user data, redirect to login
+        const currentPage = window.location.pathname.split('/').pop();
+        if (currentPage !== 'login.html' && currentPage !== 'index.html') {
+            window.location.href = 'login.html';
+        }
     }
 }
 
 function updateUserInterface(user) {
-    const profileLinks = document.querySelectorAll('.profile-info');
+    // Update profile links and user name displays
+    const profileLinks = document.querySelectorAll('.profile-info, .user-name');
     profileLinks.forEach(link => {
-        link.textContent = user.name || 'User';
+        link.textContent = user.name || user.phone || 'User';
     });
+    
+    // Update user avatar if present
+    const avatars = document.querySelectorAll('.user-avatar');
+    avatars.forEach(avatar => {
+        avatar.src = user.avatar || 'https://via.placeholder.com/40/4CAF50/FFFFFF?text=U';
+        avatar.alt = user.name || 'User';
+    });
+    
+    // Update welcome messages
+    const welcomeMessages = document.querySelectorAll('.welcome-user');
+    welcomeMessages.forEach(msg => {
+        msg.textContent = `Welcome, ${user.name || user.phone}!`;
+    });
+    
+    // Update location-based content if available
+    if (user.location) {
+        const locationElements = document.querySelectorAll('.user-location');
+        locationElements.forEach(el => {
+            el.textContent = user.location;
+        });
+    }
 }
 
 function showLoading(elementId) {
@@ -365,6 +433,214 @@ function displayProfileData(user) {
 }
 
 function handleLogout() {
-    localStorage.removeItem('agrismart_user');
+    StorageManager.removeUser();
+    StorageManager.removeToken();
+    Analytics.trackAction('logout');
     window.location.href = 'index.html';
+}
+
+// ============================================
+// PAGE-SPECIFIC INITIALIZATION FUNCTIONS
+// ============================================
+
+function initDashboard() {
+    if (!Navigation.requireAuth()) return;
+    
+    loadDashboardStats();
+    loadRecentActivity();
+    setupQuickActions();
+}
+
+function initHistory() {
+    if (!Navigation.requireAuth()) return;
+    
+    loadHistoryData();
+    setupHistoryFilters();
+}
+
+function initSettings() {
+    if (!Navigation.requireAuth()) return;
+    
+    loadUserSettings();
+    setupSettingsHandlers();
+}
+
+function initLogin() {
+    // If already logged in, redirect to dashboard
+    const user = StorageManager.getUser();
+    if (user) {
+        window.location.href = 'dashboard.html';
+        return;
+    }
+    
+    setupLoginForm();
+}
+
+// ============================================
+// COMMON UTILITY FUNCTIONS
+// ============================================
+
+function setupOfflineIndicators() {
+    // Show offline indicator when offline
+    window.addEventListener('offline', () => {
+        Notifications.show('You are offline. Some features may not work.', 'warning');
+    });
+    
+    window.addEventListener('online', () => {
+        Notifications.show('You are back online!', 'success');
+    });
+}
+
+function handlePageData(data) {
+    // Handle data passed between pages
+    if (data.type === 'crop_recommendation_result') {
+        // Auto-fill form with previous data
+        if (data.formData) {
+            Object.keys(data.formData).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) element.value = data.formData[key];
+            });
+        }
+    }
+}
+
+function loadDashboardStats() {
+    const history = StorageManager.getHistory();
+    
+    // Calculate statistics
+    const stats = {
+        totalRecommendations: history.filter(h => h.type === 'crop-recommendation').length,
+        diseaseDetections: history.filter(h => h.type === 'disease-detection').length,
+        weatherChecks: history.filter(h => h.type === 'weather-check').length,
+        marketQueries: history.filter(h => h.type === 'market-price').length
+    };
+    
+    // Update dashboard stats
+    updateDashboardUI(stats);
+}
+
+function updateDashboardUI(stats) {
+    const statElements = {
+        'total-crops': stats.totalRecommendations,
+        'disease-checks': stats.diseaseDetections,
+        'weather-queries': stats.weatherChecks,
+        'market-checks': stats.marketQueries
+    };
+    
+    Object.keys(statElements).forEach(key => {
+        const element = document.querySelector(`#${key} .stat-value`);
+        if (element) element.textContent = statElements[key];
+    });
+}
+
+function loadRecentActivity() {
+    const history = StorageManager.getHistory();
+    const recentActivity = history.slice(-5).reverse();
+    
+    const activityContainer = document.getElementById('recent-activity');
+    if (activityContainer) {
+        if (recentActivity.length === 0) {
+            activityContainer.innerHTML = '<p>No recent activity</p>';
+            return;
+        }
+        
+        const activityHTML = recentActivity.map(activity => `
+            <div class="activity-item" onclick="Navigation.goToPageWithData('history.html', {filter: '${activity.type}'})">
+                <div class="activity-icon">${getActivityIcon(activity.type)}</div>
+                <div class="activity-details">
+                    <h5>${formatActivityTitle(activity)}</h5>
+                    <small>${DateUtils.timeAgo(activity.timestamp)}</small>
+                </div>
+            </div>
+        `).join('');
+        
+        activityContainer.innerHTML = activityHTML;
+    }
+}
+
+function getActivityIcon(type) {
+    const icons = {
+        'crop-recommendation': '🌾',
+        'disease-detection': '🔬',
+        'weather-check': '🌤️',
+        'market-price': '💰',
+        'chatbot': '💬'
+    };
+    return icons[type] || '📊';
+}
+
+function formatActivityTitle(activity) {
+    switch(activity.type) {
+        case 'crop-recommendation':
+            return `Crop Recommendation - ${activity.crop || 'Unknown'}`;
+        case 'disease-detection':
+            return `Disease Detection - ${activity.disease || 'Analyzed'}`;
+        case 'weather-check':
+            return `Weather Check - ${activity.location || 'Local'}`;
+        case 'market-price':
+            return `Market Price - ${activity.crop || 'Commodity'}`;
+        case 'chatbot':
+            return 'Chatbot Consultation';
+        default:
+            return 'Activity';
+    }
+}
+
+function setupQuickActions() {
+    // Add click handlers for quick action cards
+    const quickActions = document.querySelectorAll('.feature-card[onclick], .quick-action');
+    quickActions.forEach(action => {
+        action.addEventListener('click', function(e) {
+            const href = this.getAttribute('href') || this.dataset.href;
+            if (href) {
+                Analytics.trackAction('quick_action_click', {action: href});
+            }
+        });
+    });
+}
+
+function setupLoginForm() {
+    const loginForm = document.getElementById('login-form');
+    if (!loginForm) return;
+    
+    FormUtils.autoSave('login-form', 'login');
+    
+    loginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const loginData = {
+            phone: formData.get('phone'),
+            password: formData.get('password'),
+            remember: formData.get('remember-me') === 'on'
+        };
+        
+        try {
+            showLoading('login-btn', 'Logging in...');
+            
+            // Simulate login API call
+            const response = await API.login(loginData);
+            
+            if (response.success) {
+                StorageManager.setUser(response.user);
+                StorageManager.setToken(response.token);
+                Analytics.trackAction('login', {method: 'phone'});
+                
+                FormUtils.clearSaved('login');
+                Notifications.show('Login successful!', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            } else {
+                throw new Error(response.message || 'Login failed');
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            Notifications.show(error.message || 'Login failed. Please try again.', 'error');
+        } finally {
+            hideLoading('login-btn');
+            document.querySelector('#login-form button[type="submit"]').textContent = 'Login';
+        }
+    });
 }

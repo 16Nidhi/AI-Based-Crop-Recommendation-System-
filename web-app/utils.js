@@ -48,6 +48,34 @@ const StorageManager = {
     },
     
     // History
+    addHistory: (item) => {
+        const history = JSON.parse(localStorage.getItem('agrismart_history') || '[]');
+        const historyItem = {
+            id: generateId(),
+            timestamp: new Date().toISOString(),
+            ...item
+        };
+        history.push(historyItem);
+        // Keep only last 100 items
+        if (history.length > 100) {
+            history.splice(0, history.length - 100);
+        }
+        localStorage.setItem('agrismart_history', JSON.stringify(history));
+        return historyItem;
+    },
+    
+    getHistory: () => {
+        return JSON.parse(localStorage.getItem('agrismart_history') || '[]');
+    },
+    
+    getHistoryByType: (type) => {
+        const history = JSON.parse(localStorage.getItem('agrismart_history') || '[]');
+        return history.filter(item => item.type === type);
+    },
+    
+    clearHistory: () => {
+        localStorage.removeItem('agrismart_history');
+    },
     addToHistory: (item) => {
         const history = JSON.parse(localStorage.getItem('agrismart_history') || '[]');
         history.unshift({ ...item, timestamp: new Date().toISOString() });
@@ -387,6 +415,156 @@ const NetworkUtils = {
 // EXPORT
 // ============================================
 
+// ============================================
+// ENHANCED INTERCONNECTION UTILITIES
+// ============================================
+
+// Navigation and Page Management
+const Navigation = {
+    // Check if user is authenticated
+    requireAuth: () => {
+        const user = StorageManager.getUser();
+        if (!user) {
+            window.location.href = 'login.html';
+            return false;
+        }
+        return true;
+    },
+    
+    // Update navigation state
+    updateNavigation: () => {
+        const user = StorageManager.getUser();
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const userNameElements = document.querySelectorAll('.user-name');
+        
+        if (user) {
+            if (loginBtn) loginBtn.style.display = 'none';
+            if (logoutBtn) {
+                logoutBtn.style.display = 'inline-block';
+                logoutBtn.onclick = () => {
+                    StorageManager.removeUser();
+                    StorageManager.removeToken();
+                    window.location.href = 'login.html';
+                };
+            }
+            userNameElements.forEach(el => {
+                el.textContent = user.name || user.phone || 'User';
+            });
+        } else {
+            if (loginBtn) loginBtn.style.display = 'inline-block';
+            if (logoutBtn) logoutBtn.style.display = 'none';
+        }
+    },
+    
+    // Go to page with data
+    goToPageWithData: (page, data) => {
+        if (data) {
+            sessionStorage.setItem('agrismart_page_data', JSON.stringify(data));
+        }
+        window.location.href = page;
+    },
+    
+    // Get data passed to current page
+    getPageData: () => {
+        const data = sessionStorage.getItem('agrismart_page_data');
+        if (data) {
+            sessionStorage.removeItem('agrismart_page_data');
+            return JSON.parse(data);
+        }
+        return null;
+    }
+};
+
+// Cross-platform integration utilities
+const CrossPlatform = {
+    // Check if running in mobile app
+    isMobileApp: () => {
+        return window.AgriSmartMobile !== undefined;
+    },
+    
+    // Send data to mobile app
+    sendToMobile: (data) => {
+        if (CrossPlatform.isMobileApp() && window.AgriSmartMobile.receiveWebData) {
+            window.AgriSmartMobile.receiveWebData(JSON.stringify(data));
+        }
+    },
+    
+    // Sync data with mobile app
+    syncWithMobile: () => {
+        if (CrossPlatform.isMobileApp()) {
+            const userData = StorageManager.getUser();
+            const history = StorageManager.getHistory();
+            CrossPlatform.sendToMobile({
+                type: 'sync',
+                user: userData,
+                history: history
+            });
+        }
+    }
+};
+
+// Enhanced form utilities
+const FormUtils = {
+    // Auto-save form data
+    autoSave: (formId, key) => {
+        const form = document.getElementById(formId);
+        if (!form) return;
+        
+        // Load saved data
+        const saved = localStorage.getItem(`form_${key}`);
+        if (saved) {
+            const data = JSON.parse(saved);
+            Object.keys(data).forEach(fieldName => {
+                const field = form.querySelector(`[name="${fieldName}"]`);
+                if (field) field.value = data[fieldName];
+            });
+        }
+        
+        // Save on input
+        form.addEventListener('input', () => {
+            const formData = new FormData(form);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            localStorage.setItem(`form_${key}`, JSON.stringify(data));
+        });
+    },
+    
+    // Clear saved form data
+    clearSaved: (key) => {
+        localStorage.removeItem(`form_${key}`);
+    }
+};
+
+// Analytics and tracking
+const Analytics = {
+    // Track user action
+    trackAction: (action, data = {}) => {
+        const event = {
+            action,
+            timestamp: new Date().toISOString(),
+            page: window.location.pathname,
+            user: StorageManager.getUser()?.id,
+            data
+        };
+        
+        // Store locally
+        const events = JSON.parse(localStorage.getItem('agrismart_analytics') || '[]');
+        events.push(event);
+        localStorage.setItem('agrismart_analytics', JSON.stringify(events));
+        
+        // Send to mobile if available
+        CrossPlatform.sendToMobile({ type: 'analytics', event });
+    },
+    
+    // Get analytics data
+    getAnalytics: () => {
+        return JSON.parse(localStorage.getItem('agrismart_analytics') || '[]');
+    }
+};
+
 // Make utilities globally available
 window.StorageManager = StorageManager;
 window.Validators = Validators;
@@ -396,3 +574,7 @@ window.StringUtils = StringUtils;
 window.DOMUtils = DOMUtils;
 window.Notifications = Notifications;
 window.NetworkUtils = NetworkUtils;
+window.Navigation = Navigation;
+window.CrossPlatform = CrossPlatform;
+window.FormUtils = FormUtils;
+window.Analytics = Analytics;

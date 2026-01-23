@@ -12,6 +12,26 @@
             <div class="logo">🌾 AgriSmart</div>
             <ul class="nav-menu">
                 <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="crop-recommendation.html">Crop Recommendation</a></li>
+                <li><a href="disease-detection.html">Disease Detection</a></li>
+                <li><a href="weather.html">Weather</a></li>
+                <li><a href="market-price.html">Market Prices</a></li>
+                <li><a href="chatbot.html" class="active">Chatbot</a></li>
+                <li><a href="history.html">History</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li class="auth-section">
+                    <span class="user-name">User</span>
+                    <a href="#" id="logout-btn">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+        <div class="container">
+            <div class="logo">🌾 AgriSmart</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
                 <li><a href="crop-recommendation.html">Crop Recommendation</a></li>
                 <li><a href="disease-detection.html">Disease Detection</a></li>
                 <li><a href="weather.html">Weather</a></li>
@@ -97,8 +117,12 @@
         </div>
     </footer>
 
+    <script src="config.js"></script>
+    <script src="utils.js"></script>
+    <script src="mobile-bridge.js"></script>
     <script src="api.js"></script>
     <script src="main.js"></script>
+    <script src="system-interconnection.js"></script>
     <script>
         document.querySelectorAll('.quick-question').forEach(card => {
             card.addEventListener('click', function() {

@@ -56,6 +56,25 @@
                 <li><a href="disease-detection.html">Disease Detection</a></li>
                 <li><a href="weather.html">Weather</a></li>
                 <li><a href="market-price.html">Market Prices</a></li>
+                <li><a href="chatbot.html">Chatbot</a></li>
+                <li><a href="history.html">History</a></li>
+                <li><a href="settings.html">Settings</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li class="auth-section">
+                    <span class="user-name">User</span>
+                    <a href="#" id="logout-btn">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+            <div class="logo">🌾 AgriSmart</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                <li><a href="crop-recommendation.html">Crop Recommendation</a></li>
+                <li><a href="disease-detection.html">Disease Detection</a></li>
+                <li><a href="weather.html">Weather</a></li>
+                <li><a href="market-price.html">Market Prices</a></li>
                 <li><a href="history.html">History</a></li>
                 <li><a href="profile.html">Profile</a></li>
                 <li><a href="#logout" id="logout-btn">Logout</a></li>
@@ -177,6 +196,119 @@
             <!-- Alerts & Notifications -->
             <div class="result-card" style="margin-top: 2rem;">
                 <h3>🔔 Important Alerts</h3>
+                <div id="alerts-container">
+                    <div class="alert alert-warning">
+                        <strong>Weather Alert:</strong> Heavy rain expected this week. Protect your crops!
+                    </div>
+                    <div class="alert alert-info">
+                        <strong>Market Update:</strong> Rice prices increased by 12% this month.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 AgriSmart. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="utils.js"></script>
+    <script src="mobile-bridge.js"></script>
+    <script src="api.js"></script>
+    <script src="main.js"></script>
+    <script src="system-interconnection.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+        });
+        
+        function initializeDashboard() {
+            checkAuthStatus();
+            loadDashboardData();
+            loadUserProfile();
+            loadRecentHistory();
+            loadAlerts();
+        }
+        
+        function checkAuthStatus() {
+            const user = StorageManager.getUser();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Setup logout
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.onclick = () => {
+                    StorageManager.removeUser();
+                    StorageManager.removeToken();
+                    window.location.href = 'login.html';
+                };
+            }
+        }
+        
+        function loadUserProfile() {
+            const user = StorageManager.getUser();
+            if (user) {
+                document.querySelectorAll('.user-name').forEach(el => {
+                    el.textContent = user.name || 'Farmer';
+                });
+            }
+        }
+        
+        function loadDashboardData() {
+            // Load recent recommendations
+            const history = StorageManager.getHistory();
+            const recentRecommendations = history.slice(-5);
+            
+            // Update stats
+            document.querySelector('#total-crops .stat-value').textContent = 
+                recentRecommendations.length;
+            document.querySelector('#success-rate .stat-value').textContent = '95%';
+            document.querySelector('#avg-yield .stat-value').textContent = '4.2 tons/ha';
+        }
+        
+        function loadRecentHistory() {
+            const history = StorageManager.getHistory();
+            const recentHistory = history.slice(-3);
+            
+            // Update recent activity section if exists
+            const recentSection = document.getElementById('recent-activity');
+            if (recentSection && recentHistory.length > 0) {
+                const historyHTML = recentHistory.map(item => `
+                    <div class="history-item" onclick="window.location.href='history.html'">
+                        <h5>${item.type}: ${item.crop || item.disease || 'N/A'}</h5>
+                        <small>${new Date(item.timestamp).toLocaleDateString()}</small>
+                    </div>
+                `).join('');
+                recentSection.innerHTML = `<h4>Recent Activity</h4>${historyHTML}`;
+            }
+        }
+        
+        function loadAlerts() {
+            // This would typically fetch from API
+            const alerts = [
+                { type: 'weather', message: 'Heavy rain expected this week. Protect your crops!' },
+                { type: 'market', message: 'Rice prices increased by 12% this month.' }
+            ];
+            
+            const alertsContainer = document.getElementById('alerts-container');
+            if (alertsContainer) {
+                alertsContainer.innerHTML = alerts.map(alert => `
+                    <div class="alert alert-${alert.type === 'weather' ? 'warning' : 'info'}">
+                        <strong>${alert.type === 'weather' ? 'Weather Alert' : 'Market Update'}:</strong> 
+                        ${alert.message}
+                    </div>
+                `).join('');
+            }
+        }
+    </script>
+</body>
+</html>
                 <div id="alerts-section" style="margin-top: 1rem;">
                     <p style="color: #666;">No critical alerts at this moment</p>
                 </div>
