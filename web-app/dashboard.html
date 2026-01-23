@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - AgriSmart</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #2c5f2d;
+        }
+        
+        .dashboard-card h3 {
+            color: #2c5f2d;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c5f2d;
+            margin: 1rem 0;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .chart-container {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">🌾 AgriSmart</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html" class="active">Dashboard</a></li>
+                <li><a href="crop-recommendation.html">Crop Recommendation</a></li>
+                <li><a href="disease-detection.html">Disease Detection</a></li>
+                <li><a href="weather.html">Weather</a></li>
+                <li><a href="market-price.html">Market Prices</a></li>
+                <li><a href="history.html">History</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="#logout" id="logout-btn">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>📊 Your Farm Dashboard</h1>
+            <p>Monitor your farm's performance and get personalized insights</p>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <!-- Welcome Card -->
+            <div class="dashboard-card" style="grid-column: 1 / -1;">
+                <h2>Welcome, <span id="user-name">Farmer</span>! 👋</h2>
+                <p id="dashboard-greeting"></p>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Overview Stats -->
+                <div class="dashboard-card">
+                    <h3>🌾 Total Farm Area</h3>
+                    <div class="stat-value" id="farm-area">-</div>
+                    <div class="stat-label">hectares</div>
+                    <p style="font-size: 0.9rem; color: #666; margin-top: 1rem;">
+                        Last updated: <span id="farm-area-date">-</span>
+                    </p>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>🌱 Active Crops</h3>
+                    <div class="stat-value" id="active-crops">-</div>
+                    <div class="stat-label">crops currently growing</div>
+                    <p id="crops-list" style="font-size: 0.9rem; color: #666; margin-top: 1rem;"></p>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>💰 Estimated Profit</h3>
+                    <div class="stat-value" id="estimated-profit">₹-</div>
+                    <div class="stat-label">this season</div>
+                    <p style="font-size: 0.9rem; color: #666; margin-top: 1rem;">
+                        Based on current market trends
+                    </p>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>🔬 Disease Alerts</h3>
+                    <div class="stat-value" id="disease-alerts">0</div>
+                    <div class="stat-label">active alerts</div>
+                    <p id="disease-alert-details" style="font-size: 0.9rem; color: #666; margin-top: 1rem;">
+                        No disease alerts
+                    </p>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>🌤️ Weather Status</h3>
+                    <div id="weather-status" style="margin-top: 1rem;">
+                        <p style="font-size: 1.2rem;">Loading weather...</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3>📈 Yield Performance</h3>
+                    <div class="stat-value" id="yield-performance">-</div>
+                    <div class="stat-label">vs. last season</div>
+                    <p id="yield-trend" style="font-size: 0.9rem; color: #666; margin-top: 1rem;"></p>
+                </div>
+            </div>
+
+            <!-- Recent Recommendations -->
+            <div class="result-card" style="margin-top: 2rem;">
+                <h3>📋 Recent Recommendations</h3>
+                <div id="recent-recommendations" style="margin-top: 1rem;">
+                    <p style="color: #666;">Loading recent recommendations...</p>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="result-card" style="margin-top: 2rem;">
+                <h3>⚡ Quick Actions</h3>
+                <div class="feature-grid" style="margin-top: 1rem;">
+                    <a href="crop-recommendation.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
+                        <div class="feature-icon">🌱</div>
+                        <h4>Get Crop Recommendation</h4>
+                        <p>Find best crops for your field</p>
+                    </a>
+                    <a href="disease-detection.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
+                        <div class="feature-icon">🔬</div>
+                        <h4>Detect Disease</h4>
+                        <p>Upload crop image for analysis</p>
+                    </a>
+                    <a href="weather.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
+                        <div class="feature-icon">🌤️</div>
+                        <h4>Check Weather</h4>
+                        <p>7-day forecast & alerts</p>
+                    </a>
+                    <a href="market-price.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
+                        <div class="feature-icon">💰</div>
+                        <h4>Market Prices</h4>
+                        <p>Current rates & trends</p>
+                    </a>
+                    <a href="chatbot.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
+                        <div class="feature-icon">🗣️</div>
+                        <h4>Ask AI Assistant</h4>
+                        <p>Get instant advice</p>
+                    </a>
+                    <a href="history.html" class="feature-card" style="text-decoration: none; cursor: pointer;">
+                        <div class="feature-icon">📊</div>
+                        <h4>View History</h4>
+                        <p>Past recommendations</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Alerts & Notifications -->
+            <div class="result-card" style="margin-top: 2rem;">
+                <h3>🔔 Important Alerts</h3>
+                <div id="alerts-section" style="margin-top: 1rem;">
+                    <p style="color: #666;">No critical alerts at this moment</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AgriSmart. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="utils.js"></script>
+    <script src="api.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>

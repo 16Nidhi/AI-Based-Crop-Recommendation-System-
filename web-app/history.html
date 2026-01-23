@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History - AgriSmart</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .history-filter {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background: #2c5f2d;
+            color: white;
+            border-color: #2c5f2d;
+        }
+        
+        .history-item {
+            background: white;
+            border-left: 4px solid #2c5f2d;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .history-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .history-type {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #e8f5e9;
+            color: #2c5f2d;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        
+        .history-date {
+            color: #999;
+            font-size: 0.9rem;
+        }
+        
+        .history-content {
+            margin: 1rem 0;
+        }
+        
+        .history-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: opacity 0.3s;
+        }
+        
+        .btn-small:hover {
+            opacity: 0.8;
+        }
+        
+        .btn-view {
+            background: #2c5f2d;
+            color: white;
+        }
+        
+        .btn-delete {
+            background: #ff6b6b;
+            color: white;
+        }
+        
+        .btn-export {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+        
+        .pagination button {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .pagination button.active {
+            background: #2c5f2d;
+            color: white;
+            border-color: #2c5f2d;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">🌾 AgriSmart</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="crop-recommendation.html">Crop Recommendation</a></li>
+                <li><a href="disease-detection.html">Disease Detection</a></li>
+                <li><a href="weather.html">Weather</a></li>
+                <li><a href="market-price.html">Market Prices</a></li>
+                <li><a href="history.html" class="active">History</a></li>
+                <li><a href="profile.html">Profile</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>📜 Your Activity History</h1>
+            <p>Track all your recommendations, detections, and interactions</p>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <!-- Filters -->
+            <div class="result-card">
+                <h3>Filter History</h3>
+                <div class="history-filter">
+                    <button class="filter-btn active" data-filter="all">All Activities</button>
+                    <button class="filter-btn" data-filter="crop">Crop Recommendations</button>
+                    <button class="filter-btn" data-filter="disease">Disease Detections</button>
+                    <button class="filter-btn" data-filter="weather">Weather Checks</button>
+                    <button class="filter-btn" data-filter="market">Market Price Views</button>
+                    <button class="filter-btn" data-filter="chat">Chat Messages</button>
+                </div>
+
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <input type="date" id="start-date" placeholder="From Date">
+                    <input type="date" id="end-date" placeholder="To Date">
+                    <button class="btn btn-primary" id="search-btn">Search</button>
+                    <button class="btn btn-secondary" id="export-btn">📥 Export CSV</button>
+                    <button class="btn btn-secondary" id="clear-btn">🗑️ Clear All</button>
+                </div>
+            </div>
+
+            <!-- History Items -->
+            <div id="history-items" style="margin-top: 2rem;">
+                <div class="history-item">
+                    <div class="history-header">
+                        <div>
+                            <span class="history-type">🌱 Crop Recommendation</span>
+                            <span class="history-date">January 22, 2025 - 3:45 PM</span>
+                        </div>
+                        <div>
+                            Score: <strong>92/100</strong>
+                        </div>
+                    </div>
+                    <div class="history-content">
+                        <p><strong>Recommended Crops:</strong> Rice, Wheat, Maize</p>
+                        <p><strong>Top Choice:</strong> Rice (Suitability: 92%, Predicted Yield: 55 tonnes/ha)</p>
+                        <p><strong>Farm Details:</strong> Location - Punjab, Soil pH - 6.5, NPK - 45:30:35</p>
+                    </div>
+                    <div class="history-actions">
+                        <a href="#" class="btn-small btn-view">View Details</a>
+                        <a href="#" class="btn-small btn-export">Export Report</a>
+                        <a href="#" class="btn-small btn-delete">Delete</a>
+                    </div>
+                </div>
+
+                <div class="history-item">
+                    <div class="history-header">
+                        <div>
+                            <span class="history-type">🔬 Disease Detection</span>
+                            <span class="history-date">January 21, 2025 - 10:20 AM</span>
+                        </div>
+                        <div>
+                            Confidence: <strong>94.5%</strong>
+                        </div>
+                    </div>
+                    <div class="history-content">
+                        <p><strong>Disease Detected:</strong> Late Blight</p>
+                        <p><strong>Severity:</strong> Moderate</p>
+                        <p><strong>Affected Crop:</strong> Potato</p>
+                        <p><strong>Treatment:</strong> Apply copper-based fungicide, improve air circulation</p>
+                    </div>
+                    <div class="history-actions">
+                        <a href="#" class="btn-small btn-view">View Details</a>
+                        <a href="#" class="btn-small btn-export">Export Report</a>
+                        <a href="#" class="btn-small btn-delete">Delete</a>
+                    </div>
+                </div>
+
+                <div class="history-item">
+                    <div class="history-header">
+                        <div>
+                            <span class="history-type">💰 Market Price Check</span>
+                            <span class="history-date">January 20, 2025 - 5:15 PM</span>
+                        </div>
+                        <div>
+                            Trend: <strong>📈 Up</strong>
+                        </div>
+                    </div>
+                    <div class="history-content">
+                        <p><strong>Crop Checked:</strong> Wheat</p>
+                        <p><strong>Markets Checked:</strong> Ludhiana, Amritsar, Jalandhar</p>
+                        <p><strong>Current Price:</strong> ₹2,150/quintal</p>
+                        <p><strong>Recommendation:</strong> Good time to sell - prices trending upward</p>
+                    </div>
+                    <div class="history-actions">
+                        <a href="#" class="btn-small btn-view">View Details</a>
+                        <a href="#" class="btn-small btn-export">Export Report</a>
+                        <a href="#" class="btn-small btn-delete">Delete</a>
+                    </div>
+                </div>
+
+                <div class="history-item">
+                    <div class="history-header">
+                        <div>
+                            <span class="history-type">🌤️ Weather Check</span>
+                            <span class="history-date">January 19, 2025 - 8:30 AM</span>
+                        </div>
+                        <div>
+                            Status: <strong>📌 Clear</strong>
+                        </div>
+                    </div>
+                    <div class="history-content">
+                        <p><strong>Location:</strong> Punjab</p>
+                        <p><strong>Current Conditions:</strong> 28°C, Humidity 65%, Wind 10 km/h</p>
+                        <p><strong>7-Day Forecast:</strong> Mostly clear with 30% chance of rain on Day 4</p>
+                    </div>
+                    <div class="history-actions">
+                        <a href="#" class="btn-small btn-view">View Details</a>
+                        <a href="#" class="btn-small btn-export">Export Report</a>
+                        <a href="#" class="btn-small btn-delete">Delete</a>
+                    </div>
+                </div>
+
+                <div class="history-item">
+                    <div class="history-header">
+                        <div>
+                            <span class="history-type">🗣️ Chat Message</span>
+                            <span class="history-date">January 18, 2025 - 2:00 PM</span>
+                        </div>
+                        <div>
+                            Language: <strong>English</strong>
+                        </div>
+                    </div>
+                    <div class="history-content">
+                        <p><strong>Question:</strong> "What is the best time to plant rice this season?"</p>
+                        <p><strong>Response:</strong> "The best time to plant rice is during the monsoon season (June-July) when there is adequate rainfall. Based on your location in Punjab, you should begin transplanting by late June..."</p>
+                    </div>
+                    <div class="history-actions">
+                        <a href="#" class="btn-small btn-view">View Full</a>
+                        <a href="#" class="btn-small btn-delete">Delete</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button class="active">1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>→ Next</button>
+            </div>
+
+            <!-- Statistics -->
+            <div class="result-card" style="margin-top: 2rem;">
+                <h3>📊 Your Activity Statistics</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🌱</div>
+                        <h4>Recommendations</h4>
+                        <p><strong>45</strong> crop recommendations made</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔬</div>
+                        <h4>Disease Tests</h4>
+                        <p><strong>12</strong> disease detections performed</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💬</div>
+                        <h4>Chat Messages</h4>
+                        <p><strong>156</strong> messages exchanged</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <h4>Price Checks</h4>
+                        <p><strong>78</strong> market price lookups</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AgriSmart. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="utils.js"></script>
+    <script src="api.js"></script>
+    <script src="history.js"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot - AgriSmart</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">🌾 AgriSmart</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="crop-recommendation.html">Crop Recommendation</a></li>
+                <li><a href="disease-detection.html">Disease Detection</a></li>
+                <li><a href="weather.html">Weather</a></li>
+                <li><a href="market-price.html">Market Prices</a></li>
+                <li><a href="chatbot.html">Chatbot</a></li>
+                <li><a href="profile.html">Profile</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>🗣️ Multilingual AI Chatbot</h1>
+            <p>Ask questions in your preferred language and get instant agricultural advice</p>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="chatbot-container">
+                <div class="result-card" style="padding: 0; margin: 0;">
+                    <div style="padding: 1rem; background-color: #2c5f2d; color: white;">
+                        <h3 style="margin: 0;">AgriSmart Assistant</h3>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;">Available in: English, Hindi, Tamil, Telugu, Kannada, Marathi, Bengali, Punjabi</p>
+                    </div>
+                    
+                    <div id="chat-messages" class="chat-messages">
+                        <div class="message bot">
+                            Hello! I'm your AgriSmart assistant. How can I help you today?
+                        </div>
+                        <div class="message bot">
+                            You can ask me about:
+                            <br>• Crop recommendations
+                            <br>• Disease identification
+                            <br>• Weather forecasts
+                            <br>• Market prices
+                            <br>• Farming best practices
+                            <br>• Soil management
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input">
+                        <select id="language-select" style="padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px;">
+                            <option value="en">English</option>
+                            <option value="hi">हिंदी</option>
+                            <option value="ta">தமிழ்</option>
+                            <option value="te">తెలుగు</option>
+                            <option value="kn">ಕನ್ನಡ</option>
+                            <option value="mr">मराठी</option>
+                            <option value="bn">বাংলা</option>
+                            <option value="pa">ਪੰਜਾਬੀ</option>
+                        </select>
+                        <input type="text" id="message-input" placeholder="Type your question here...">
+                        <button id="voice-input" class="btn btn-secondary" title="Voice Input">🎤</button>
+                        <button id="send-message" class="btn btn-primary">Send</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-card">
+                <h3>📚 Quick Questions</h3>
+                <div class="feature-grid">
+                    <div class="feature-card quick-question" data-question="What crops are best for my region?">
+                        <p>What crops are best for my region?</p>
+                    </div>
+                    <div class="feature-card quick-question" data-question="How to identify leaf blight disease?">
+                        <p>How to identify leaf blight disease?</p>
+                    </div>
+                    <div class="feature-card quick-question" data-question="What is the current wheat price?">
+                        <p>What is the current wheat price?</p>
+                    </div>
+                    <div class="feature-card quick-question" data-question="When should I irrigate my crops?">
+                        <p>When should I irrigate my crops?</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 AgriSmart. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="api.js"></script>
+    <script src="main.js"></script>
+    <script>
+        document.querySelectorAll('.quick-question').forEach(card => {
+            card.addEventListener('click', function() {
+                const question = this.getAttribute('data-question');
+                document.getElementById('message-input').value = question;
+                document.getElementById('send-message').click();
+            });
+        });
+    </script>
+</body>
+</html>

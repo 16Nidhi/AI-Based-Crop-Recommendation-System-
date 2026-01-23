@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AgriSmart</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">🌾 AgriSmart</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Welcome Back to AgriSmart</h1>
+            <p>Sign in to access your personalized farming dashboard</p>
+        </div>
+    </section>
+
+    <section class="auth-container">
+        <div class="container">
+            <div class="auth-card">
+                <h2>User Login</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="+919876543210" pattern="[+0-9\s-]+">
+                        <small>Enter your registered phone number (with country code)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required placeholder="Enter your password" minlength="8">
+                    </div>
+
+                    <div class="form-group checkbox">
+                        <input type="checkbox" id="remember-me" name="remember-me">
+                        <label for="remember-me">Remember me on this device</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; cursor: pointer;">Login</button>
+                </form>
+
+                <div class="auth-divider">or</div>
+
+                <div class="social-auth">
+                    <button class="btn-social" id="google-auth" title="Login with Google">
+                        <span style="font-size: 1.5rem;">🔍</span> Google
+                    </button>
+                    <button class="btn-social" id="phone-auth" title="Login with OTP">
+                        <span style="font-size: 1.5rem;">📱</span> Phone OTP
+                    </button>
+                </div>
+
+                <p class="auth-footer">
+                    Don't have an account? <a href="register.html">Sign up here</a>
+                </p>
+
+                <p class="auth-footer">
+                    <a href="#forgot-password">Forgot your password?</a>
+                </p>
+            </div>
+
+            <div class="info-card">
+                <h3>🌱 Why Choose AgriSmart?</h3>
+                <ul>
+                    <li>✅ AI-powered crop recommendations</li>
+                    <li>✅ Real-time disease detection</li>
+                    <li>✅ Weather forecasts and alerts</li>
+                    <li>✅ Market price tracking</li>
+                    <li>✅ Multilingual support (8+ languages)</li>
+                    <li>✅ Works offline with cached data</li>
+                    <li>✅ Personalized insights for your farm</li>
+                    <li>✅ Free for all farmers</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- OTP Modal -->
+    <div id="otp-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Verify with OTP</h2>
+            <p id="otp-message">Enter the OTP sent to your phone number</p>
+            <form id="otp-form">
+                <div class="form-group">
+                    <label for="otp">One-Time Password (OTP)</label>
+                    <input type="text" id="otp" name="otp" required placeholder="000000" pattern="[0-9]{6}" maxlength="6">
+                </div>
+                <p style="font-size: 0.9rem; color: #666;">
+                    Didn't receive? <a href="#resend-otp" id="resend-otp-link">Resend OTP</a>
+                </p>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Verify OTP</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 AgriSmart. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <script src="utils.js"></script>
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+</body>
+</html>
