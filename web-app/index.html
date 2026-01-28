@@ -4,98 +4,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgriSmart - AI-Based Crop Recommendation System</title>
+    <meta name="description" content="AgriSmart - AI-powered agricultural decision support system for smart farming. Get crop recommendations, disease detection, weather forecasts, and market prices.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <nav class="navbar">
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
         <div class="container">
-            <div class="logo">🌾 AgriSmart</div>
-            <ul class="nav-menu">
-                <li><a href="index.html">Home</a></li>
+            <a href="index.html" class="logo">
+                <div class="logo-icon">🌾</div>
+                <span>AgriSmart</span>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html" class="active">Home</a></li>
                 <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="crop-recommendation.html">Crop Recommendation</a></li>
-                <li><a href="disease-detection.html">Disease Detection</a></li>
+                <li><a href="crop-recommendation.html">Crops</a></li>
+                <li><a href="disease-detection.html">Disease</a></li>
                 <li><a href="weather.html">Weather</a></li>
-                <li><a href="market-price.html">Market Prices</a></li>
+                <li><a href="market-price.html">Market</a></li>
                 <li><a href="chatbot.html">Chatbot</a></li>
-                <li><a href="history.html">History</a></li>
-                <li><a href="settings.html">Settings</a></li>
-                <li><a href="profile.html">Profile</a></li>
                 <li class="auth-section">
-                    <a href="login.html" id="login-btn">Login</a>
-                    <a href="#" id="logout-btn" style="display: none;">Logout</a>
+                    <a href="login.html" class="btn-login" id="login-btn">Login</a>
+                    <a href="#" class="btn-login" id="logout-btn" style="display: none;">Logout</a>
                 </li>
             </ul>
         </div>
     </nav>
 
+    <!-- Hero Section -->
     <header class="hero">
         <div class="container">
-            <h1>Welcome to AgriSmart</h1>
-            <p>AI-Powered Agricultural Decision Support System</p>
+            <span class="hero-badge">
+                🚀 AI-Powered Agriculture Platform
+            </span>
+            <h1>
+                Smart Farming with<br>
+                <span class="gradient-text">AgriSmart AI</span>
+            </h1>
+            <p>
+                Transform your farming with AI-powered crop recommendations, 
+                instant disease detection, real-time weather insights, and 
+                live market prices — all in one platform.
+            </p>
             <div class="hero-buttons">
-                <a href="crop-recommendation.html" class="btn btn-primary">Get Crop Recommendations</a>
-                <a href="disease-detection.html" class="btn btn-secondary">Detect Disease</a>
+                <a href="crop-recommendation.html" class="btn btn-primary btn-lg">
+                    🌱 Get Crop Recommendations
+                </a>
+                <a href="disease-detection.html" class="btn btn-secondary btn-lg">
+                    🔬 Detect Plant Disease
+                </a>
             </div>
         </div>
     </header>
 
+    <!-- Features Section -->
     <section class="features">
         <div class="container">
-            <h2>Our Features</h2>
+            <div class="section-header">
+                <span class="section-badge">✨ Features</span>
+                <h2 class="section-title">Everything You Need for Smart Farming</h2>
+                <p class="section-subtitle">
+                    Comprehensive AI-powered tools designed to help farmers make 
+                    better decisions and maximize their yields.
+                </p>
+            </div>
+            
             <div class="feature-grid">
-                <div class="feature-card">
+                <article class="feature-card">
                     <div class="feature-icon">🌱</div>
-                    <h3>Crop Recommendation</h3>
-                    <p>AI-driven recommendations based on soil, weather, and market data</p>
-                    <a href="crop-recommendation.html" class="btn-link">Learn More →</a>
-                </div>
-                <div class="feature-card">
+                    <h3>AI Crop Recommendation</h3>
+                    <p>Get personalized crop suggestions based on your soil type, weather conditions, and market demand using advanced machine learning.</p>
+                    <a href="crop-recommendation.html" class="btn-link">Learn More</a>
+                </article>
+                
+                <article class="feature-card">
                     <div class="feature-icon">🔬</div>
                     <h3>Disease Detection</h3>
-                    <p>Image-based crop disease identification with treatment advice</p>
-                    <a href="disease-detection.html" class="btn-link">Learn More →</a>
-                </div>
-                <div class="feature-card">
+                    <p>Upload a photo of your plant and our AI instantly identifies diseases with treatment recommendations and prevention tips.</p>
+                    <a href="disease-detection.html" class="btn-link">Learn More</a>
+                </article>
+                
+                <article class="feature-card">
                     <div class="feature-icon">🌤️</div>
                     <h3>Weather Forecast</h3>
-                    <p>7-day hyperlocal weather predictions for better planning</p>
-                    <a href="weather.html" class="btn-link">Learn More →</a>
-                </div>
-                <div class="feature-card">
+                    <p>Get hyperlocal 7-day weather predictions, rainfall alerts, and farming advisories tailored to your location.</p>
+                    <a href="weather.html" class="btn-link">Learn More</a>
+                </article>
+                
+                <article class="feature-card">
                     <div class="feature-icon">💰</div>
                     <h3>Market Prices</h3>
-                    <p>Real-time crop prices and market trend analysis</p>
-                    <a href="market-price.html" class="btn-link">Learn More →</a>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🗣️</div>
-                    <h3>Multilingual Chatbot</h3>
-                    <p>Voice and chat support in 8+ regional languages</p>
-                    <a href="chatbot.html" class="btn-link">Learn More →</a>
-                </div>
-                <div class="feature-card">
+                    <p>Track real-time crop prices from multiple markets, view trends, and get price alerts for optimal selling decisions.</p>
+                    <a href="market-price.html" class="btn-link">Learn More</a>
+                </article>
+                
+                <article class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI Chatbot</h3>
+                    <p>Ask farming questions in your language and get instant expert answers. Supports 8+ regional languages with voice input.</p>
+                    <a href="chatbot.html" class="btn-link">Learn More</a>
+                </article>
+                
+                <article class="feature-card">
                     <div class="feature-icon">📊</div>
                     <h3>Analytics Dashboard</h3>
-                    <p>Track performance, yields, and profitability metrics</p>
-                    <a href="dashboard.html" class="btn-link">Learn More →</a>
-                </div>
-                <div class="feature-card">
+                    <p>Track your farming performance, monitor yields, view profitability metrics, and get actionable insights.</p>
+                    <a href="dashboard.html" class="btn-link">Learn More</a>
+                </article>
+                
+                <article class="feature-card">
                     <div class="feature-icon">📋</div>
                     <h3>History Tracking</h3>
-                    <p>View past recommendations and track farming decisions</p>
-                    <a href="history.html" class="btn-link">Learn More →</a>
-                </div>
-                <div class="feature-card">
+                    <p>Keep a complete record of your farming decisions, crop cycles, and outcomes for better future planning.</p>
+                    <a href="history.html" class="btn-link">Learn More</a>
+                </article>
+                
+                <article class="feature-card">
                     <div class="feature-icon">⚙️</div>
-                    <h3>Settings & Preferences</h3>
-                    <p>Customize your farming preferences and notifications</p>
-                    <a href="settings.html" class="btn-link">Learn More →</a>
-                </div>
+                    <h3>Smart Settings</h3>
+                    <p>Customize notifications, set alerts, choose your language, and personalize your farming experience.</p>
+                    <a href="settings.html" class="btn-link">Learn More</a>
+                </article>
             </div>
         </div>
     </section>
 
+    <!-- Stats Section -->
     <section class="stats">
         <div class="container">
             <div class="stats-grid">
@@ -113,15 +157,75 @@
                 </div>
                 <div class="stat-item">
                     <h3>8+</h3>
-                    <p>Languages Supported</p>
+                    <p>Languages</p>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-card">
+                <div class="cta-content">
+                    <h2>Ready to Transform Your Farming?</h2>
+                    <p>Join thousands of farmers who are already using AgriSmart to increase their yields and profits.</p>
+                    <div class="hero-buttons">
+                        <a href="login.html" class="btn btn-primary btn-lg">Get Started Free</a>
+                        <a href="dashboard.html" class="btn btn-secondary btn-lg">Explore Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2026 AgriSmart. All rights reserved.</p>
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <span>🌾</span> AgriSmart
+                    </div>
+                    <p>AI-powered agricultural platform helping farmers make smarter decisions with data-driven insights.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Features</h4>
+                    <ul class="footer-links">
+                        <li><a href="crop-recommendation.html">Crop Recommendation</a></li>
+                        <li><a href="disease-detection.html">Disease Detection</a></li>
+                        <li><a href="weather.html">Weather Forecast</a></li>
+                        <li><a href="market-price.html">Market Prices</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="chatbot.html">AI Chatbot</a></li>
+                        <li><a href="history.html">History</a></li>
+                        <li><a href="settings.html">Settings</a></li>
+                        <li><a href="profile.html">Profile</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 AgriSmart. All rights reserved. Built with ❤️ for farmers.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link" aria-label="Twitter">𝕏</a>
+                    <a href="#" class="social-link" aria-label="Facebook">f</a>
+                    <a href="#" class="social-link" aria-label="Instagram">📷</a>
+                    <a href="#" class="social-link" aria-label="YouTube">▶</a>
+                </div>
+            </div>
         </div>
     </footer>
 
@@ -132,6 +236,26 @@
     <script src="main.js"></script>
     <script src="system-interconnection.js"></script>
     <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navMenu = document.getElementById('nav-menu');
+        
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+        }
+        
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
         // Initialize authentication check
         document.addEventListener('DOMContentLoaded', function() {
             checkAuthStatus();
@@ -148,6 +272,22 @@
                 if (logoutBtn) {
                     logoutBtn.style.display = 'block';
                     logoutBtn.onclick = () => {
+                        StorageManager.clearUser();
+                        window.location.reload();
+                    };
+                }
+            } else {
+                if (loginBtn) loginBtn.style.display = 'block';
+                if (logoutBtn) logoutBtn.style.display = 'none';
+            }
+        }
+        
+        function loadUserProfile() {
+            // User profile logic
+        }
+    </script>
+</body>
+</html>
                         StorageManager.removeUser();
                         StorageManager.removeToken();
                         window.location.href = 'login.html';

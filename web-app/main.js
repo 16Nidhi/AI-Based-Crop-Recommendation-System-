@@ -69,7 +69,8 @@ function loadUserData() {
     } else {
         // If not on login page and no user data, redirect to login
         const currentPage = window.location.pathname.split('/').pop();
-        if (currentPage !== 'login.html' && currentPage !== 'index.html') {
+        const publicPages = ['login.html', 'login', 'index.html', 'index', ''];
+        if (!publicPages.includes(currentPage)) {
             window.location.href = 'login.html';
         }
     }

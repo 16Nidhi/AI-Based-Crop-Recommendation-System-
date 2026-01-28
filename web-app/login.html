@@ -4,40 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - AgriSmart</title>
+    <meta name="description" content="Login to AgriSmart - Your AI-powered farming assistant">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <nav class="navbar">
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
         <div class="container">
-            <div class="logo">🌾 AgriSmart</div>
+            <a href="index.html" class="logo">
+                <div class="logo-icon">🌾</div>
+                <span>AgriSmart</span>
+            </a>
+            
             <ul class="nav-menu">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="login.html">Login</a></li>
+                <li><a href="login.html" class="active">Login</a></li>
             </ul>
         </div>
     </nav>
 
-    <section class="hero">
+    <!-- Hero Section -->
+    <section class="hero" style="padding: var(--space-12) 0;">
         <div class="container">
-            <h1>Welcome Back to AgriSmart</h1>
+            <h1>Welcome Back! 👋</h1>
             <p>Sign in to access your personalized farming dashboard</p>
         </div>
     </section>
 
+    <!-- Auth Container -->
     <section class="auth-container">
         <div class="container">
             <div class="auth-card">
-                <h2>User Login</h2>
+                <h2>🔐 User Login</h2>
                 <form id="login-form">
                     <div class="form-group">
                         <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" name="phone" required placeholder="+919876543210" pattern="[+0-9\s-]+">
+                        <input type="tel" id="phone" name="phone" required placeholder="+91 98765 43210" pattern="[+0-9\s-]+">
                         <small>Enter your registered phone number (with country code)</small>
                     </div>
 
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" id="password" name="password" required placeholder="Enter your password" minlength="8">
+                        <input type="password" id="password" name="password" required placeholder="••••••••" minlength="6">
                     </div>
 
                     <div class="form-group checkbox">
@@ -45,22 +56,24 @@
                         <label for="remember-me">Remember me on this device</label>
                     </div>
 
-                    <button type="submit" class="btn btn-primary" style="width: 100%; cursor: pointer;">Login</button>
+                    <button type="submit" class="btn btn-primary w-full">
+                        Login to Dashboard
+                    </button>
                 </form>
 
-                <div class="auth-divider">or</div>
+                <div class="auth-divider">or continue with</div>
 
                 <div class="social-auth">
                     <button class="btn-social" id="google-auth" title="Login with Google">
-                        <span style="font-size: 1.5rem;">🔍</span> Google
+                        <span>🔍</span> Google
                     </button>
                     <button class="btn-social" id="phone-auth" title="Login with OTP">
-                        <span style="font-size: 1.5rem;">📱</span> Phone OTP
+                        <span>📱</span> Phone OTP
                     </button>
                 </div>
 
                 <p class="auth-footer">
-                    Don't have an account? <a href="register.html">Sign up here</a>
+                    Don't have an account? <a href="register.html">Create one for free</a>
                 </p>
 
                 <p class="auth-footer">
@@ -87,36 +100,64 @@
     <!-- OTP Modal -->
     <div id="otp-modal" class="modal" style="display: none;">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Verify with OTP</h2>
-            <p id="otp-message">Enter the OTP sent to your phone number</p>
+            <button class="close" aria-label="Close modal">&times;</button>
+            <h2>🔐 Verify with OTP</h2>
+            <p id="otp-message">Enter the 6-digit code sent to your phone</p>
             <form id="otp-form">
                 <div class="form-group">
                     <label for="otp">One-Time Password (OTP)</label>
-                    <input type="text" id="otp" name="otp" required placeholder="000000" pattern="[0-9]{6}" maxlength="6">
+                    <input type="text" id="otp" name="otp" required placeholder="• • • • • •" pattern="[0-9]{6}" maxlength="6" style="text-align: center; letter-spacing: 0.5rem; font-size: 1.5rem;">
                 </div>
-                <p style="font-size: 0.9rem; color: #666;">
+                <p class="auth-footer" style="margin-top: var(--space-4);">
                     Didn't receive? <a href="#resend-otp" id="resend-otp-link">Resend OTP</a>
                 </p>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Verify OTP</button>
+                <button type="submit" class="btn btn-primary w-full">Verify & Continue</button>
             </form>
         </div>
     </div>
 
-    <footer>
+    <!-- Footer -->
+    <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 AgriSmart. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+            <p>&copy; 2026 AgriSmart. All rights reserved. Built with ❤️ for farmers.</p>
         </div>
     </footer>
 
-    <script src="utils.js"></script>
-    <script src="api.js"></script>
-    <script src="auth.js"></script>
     <script src="config.js"></script>
     <script src="utils.js"></script>
     <script src="mobile-bridge.js"></script>
     <script src="api.js"></script>
     <script src="main.js"></script>
     <script src="system-interconnection.js"></script>
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Close modal
+        const modal = document.getElementById('otp-modal');
+        const closeBtn = modal.querySelector('.close');
+        
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+        // Phone OTP button
+        document.getElementById('phone-auth').addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+    </script>
 </body>
 </html>
