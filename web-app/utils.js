@@ -35,6 +35,15 @@ const StorageManager = {
         localStorage.removeItem('agrismart_token');
     },
     
+    // Complete logout - clears all user data
+    logout: () => {
+        localStorage.removeItem('agrismart_user');
+        localStorage.removeItem('agrismart_token');
+        localStorage.removeItem('agrismart_prefs');
+        localStorage.removeItem('agrismart_history');
+        console.log('User logged out - all data cleared');
+    },
+    
     // User preferences
     setPreference: (key, value) => {
         const prefs = JSON.parse(localStorage.getItem('agrismart_prefs') || '{}');

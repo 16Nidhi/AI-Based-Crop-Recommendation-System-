@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings - AgriSmart</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=20260131">
+    <link rel="stylesheet" href="dashboard-theme.css">
     <style>
         .settings-grid {
             display: grid;
@@ -155,7 +156,21 @@
         }
     </style>
 </head>
-<body>
+<body class="dashboard-theme page-settings">
+    <!-- Site Version Banner -->
+
+    <div class="mesh-overlay" aria-hidden="true"></div>
+    <!-- Dashboard Parallax Background -->
+    <div class="dashboard-parallax-wrapper">
+        <div class="parallax-layer parallax-layer-1"></div>
+        <div class="parallax-layer parallax-layer-2"></div>
+        <div class="parallax-layer parallax-layer-3"></div>
+        <div class="parallax-mesh"></div>
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+            <div class="crop-zone-map"></div>
+    </div>
     <nav class="navbar">
         <div class="container">
             <div class="logo">🌾 AgriSmart</div>
@@ -178,12 +193,13 @@
         </div>
     </nav>
 
-    <section class="hero">
+    <section class="hero glass">
         <div class="container">
             <h1>⚙️ Settings & Preferences</h1>
             <p>Customize your AgriSmart experience</p>
         </div>
     </section>
+        <main class="home-shell">
 
     <section class="features">
         <div class="container">
@@ -420,6 +436,26 @@
                         <h2>⚡ Preferences</h2>
                         <div class="settings-row">
                             <div>
+                                <p><strong>Swipe Navigation</strong></p>
+                                <small>Navigate between pages using swipe gestures</small>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="swipe-navigation-toggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="settings-row">
+                            <div>
+                                <p><strong>Swipe Loop</strong></p>
+                                <small>Loop from last page to first when swiping</small>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="swipe-loop-toggle">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="settings-row">
+                            <div>
                                 <p><strong>Dark Mode</strong></p>
                                 <small>Use dark theme for reduced eye strain</small>
                             </div>
@@ -496,6 +532,7 @@
                         </p>
                         <p style="color: #666;">
                             <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a> | <a href="#">Contact Support</a>
+                </main>
                         </p>
                     </div>
                 </div>
@@ -510,11 +547,26 @@
     </footer>
 
     <script src="config.js"></script>
+    <!-- JavaScript Services -->
+    <script src="config.js"></script>
     <script src="utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/authService.js"></script>
+    <script src="js/cropService.js"></script>
+    <script src="js/diseaseService.js"></script>
+    <script src="js/weatherService.js"></script>
+    <script src="js/marketService.js"></script>
+    <script src="js/chatService.js"></script>
+    <script src="js/profileService.js"></script>
+    <script src="js/locationService.js"></script>
+    <script src="js/notificationService.js"></script>
+    <script src="js/uiHelper.js"></script>
+    <script src="js/agriSmartApp.js"></script>
     <script src="mobile-bridge.js"></script>
     <script src="api.js"></script>
-    <script src="main.js"></script>
+    <script src="main.js?v=20260131"></script>
     <script src="system-interconnection.js"></script>
     <script src="settings.js"></script>
+
 </body>
 </html>

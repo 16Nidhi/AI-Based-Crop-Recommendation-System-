@@ -100,17 +100,8 @@ const API = {
             return response;
         } catch (error) {
             console.error('Login error:', error);
-            // Return mock data for demo
-            return {
-                success: true,
-                user: {
-                    id: 'demo_user',
-                    name: 'Demo Farmer',
-                    phone: credentials.phone,
-                    location: 'Demo Location'
-                },
-                token: 'demo_token_123'
-            };
+            // Don't return demo data - require actual authentication
+            throw error;
         }
     },
     
@@ -262,7 +253,7 @@ const API = {
 
     async getWeather(location) {
         try {
-            const response = await apiRequest(`/weather?location=${encodeURIComponent(location)}`);
+            const response = await apiRequest(`/api/weather/forecast?location=${encodeURIComponent(location)}`);
             
             // Save to history
             StorageManager.addHistory({
@@ -275,14 +266,7 @@ const API = {
             return response;
         } catch (error) {
             console.error('Weather API error:', error);
-            // Save to history
-            StorageManager.addHistory({
-                type: 'weather-check',
-                location: location,
-                result: `Checked weather for ${location}`,
-                timestamp: new Date().toISOString()
-            });
-            
+            // Return demo weather data as fallback
             return {
                 success: true,
                 location: location,
@@ -297,6 +281,16 @@ const API = {
                 },
                 forecast: [
                     { date: 'Mon', condition: 'Sunny', temp: 30, rainfall: 0, humidity: 55 },
+                    { date: 'Tue', condition: 'Cloudy', temp: 26, rainfall: 2, humidity: 70 },
+                    { date: 'Wed', condition: 'Rainy', temp: 24, rainfall: 15, humidity: 85 },
+                    { date: 'Thu', condition: 'Sunny', temp: 29, rainfall: 0, humidity: 60 },
+                    { date: 'Fri', condition: 'Partly Cloudy', temp: 27, rainfall: 1, humidity: 68 },
+                    { date: 'Sat', condition: 'Thunderstorms', temp: 25, rainfall: 20, humidity: 80 },
+                    { date: 'Sun', condition: 'Sunny', temp: 31, rainfall: 0, humidity: 50 }
+                ]
+            };
+        }
+    },
                     { date: 'Tue', condition: 'Cloudy', temp: 28, rainfall: 5, humidity: 70 },
                     { date: 'Wed', condition: 'Rainy', temp: 26, rainfall: 15, humidity: 85 },
                     { date: 'Thu', condition: 'Rainy', temp: 25, rainfall: 20, humidity: 88 },
@@ -319,7 +313,7 @@ const API = {
 
     async getMarketPrices(crop) {
         try {
-            const response = await apiRequest(`/market-prices?crop=${encodeURIComponent(crop)}`);
+            const response = await apiRequest(`/api/market/prices?crop=${encodeURIComponent(crop)}`);
             
             // Save to history
             StorageManager.addHistory({
@@ -332,8 +326,8 @@ const API = {
             return response;
         } catch (error) {
             console.error('Market prices error:', error);
-            
-            const mockData = {
+            // Return demo market data as fallback
+            return {
                 success: true,
                 crop: crop,
                 markets: [
@@ -354,6 +348,7 @@ const API = {
                     'Government procurement at minimum support price'
                 ]
             };
+        }
             
             // Save to history
             StorageManager.addHistory({

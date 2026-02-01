@@ -4,15 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Market Prices - AgriSmart</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=20260131">
+    <link rel="stylesheet" href="dashboard-theme.css">
 </head>
-<body>
+<body class="dashboard-theme page-market">
+    <!-- Site Version Banner -->
+
+    <div class="mesh-overlay" aria-hidden="true"></div>
+    <!-- Dashboard Parallax Background -->
+    <div class="dashboard-parallax-wrapper">
+        <div class="parallax-layer parallax-layer-1"></div>
+        <div class="parallax-layer parallax-layer-2"></div>
+        <div class="parallax-layer parallax-layer-3"></div>
+        <div class="parallax-mesh"></div>
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+        <div class="crop-zone-map"></div>
+    </div>
     <nav class="navbar">
         <div class="container">
             <div class="logo">🌾 AgriSmart</div>
             <ul class="nav-menu">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="dashboard.html?nocache=1">Dashboard</a></li>
                 <li><a href="crop-recommendation.html">Crop Recommendation</a></li>
                 <li><a href="disease-detection.html">Disease Detection</a></li>
                 <li><a href="weather.html">Weather</a></li>
@@ -28,21 +43,9 @@
             </ul>
         </div>
     </nav>
-        <div class="container">
-            <div class="logo">🌾 AgriSmart</div>
-            <ul class="nav-menu">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="crop-recommendation.html">Crop Recommendation</a></li>
-                <li><a href="disease-detection.html">Disease Detection</a></li>
-                <li><a href="weather.html">Weather</a></li>
-                <li><a href="market-price.html">Market Prices</a></li>
-                <li><a href="chatbot.html">Chatbot</a></li>
-                <li><a href="profile.html">Profile</a></li>
-            </ul>
-        </div>
-    </nav>
 
-    <section class="hero">
+    <main class="home-shell">
+    <section class="hero glass">
         <div class="container">
             <h1>💰 Market Price Tracking</h1>
             <p>Real-time crop prices and market trend analysis</p>
@@ -99,8 +102,9 @@
             </div>
         </div>
     </section>
+    </main>
 
-    <footer class="footer">
+    <footer class="footer theme-dark">
         <div class="container">
             <p>&copy; 2026 AgriSmart. All rights reserved.</p>
         </div>
@@ -108,10 +112,25 @@
 
     <script src="api.js"></script>
     <script src="config.js"></script>
+    <!-- JavaScript Services -->
+    <script src="config.js"></script>
     <script src="utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/authService.js"></script>
+    <script src="js/cropService.js"></script>
+    <script src="js/diseaseService.js"></script>
+    <script src="js/weatherService.js"></script>
+    <script src="js/marketService.js"></script>
+    <script src="js/chatService.js"></script>
+    <script src="js/profileService.js"></script>
+    <script src="js/locationService.js"></script>
+    <script src="js/notificationService.js"></script>
+    <script src="js/uiHelper.js"></script>
+    <script src="js/agriSmartApp.js"></script>
     <script src="mobile-bridge.js"></script>
     <script src="api.js"></script>
-    <script src="main.js"></script>
+    <script src="main.js?v=20260131"></script>
     <script src="system-interconnection.js"></script>
+
 </body>
 </html>

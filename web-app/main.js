@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
+    // Initialize swipe navigation
+    SwipeNavigation.init();
 });
 
 function initializeApp() {
@@ -51,6 +53,11 @@ function initCommonFeatures() {
     // Setup offline indicators
     setupOfflineIndicators();
     
+    // If site-dashboard-theme is present, enable lightweight parallax background
+    if (document.body.classList.contains('site-dashboard-theme')) {
+        initDashboardBgParallax();
+    }
+    
     // Check for page data
     const pageData = Navigation.getPageData();
     if (pageData) {
@@ -58,8 +65,49 @@ function initCommonFeatures() {
     }
 }
 
+// Lightweight dashboard background parallax (mouse-based, low impact)
+function initDashboardBgParallax() {
+    try {
+        const bg = document.querySelector('.dashboard-bg');
+        if (!bg) return;
+        const orbs = bg.querySelectorAll('.orb');
+        let w = window.innerWidth, h = window.innerHeight;
+        window.addEventListener('resize', () => { w = window.innerWidth; h = window.innerHeight; });
+
+        document.addEventListener('pointermove', (e) => {
+            const x = (e.clientX / w - 0.5) * 2; // -1..1
+            const y = (e.clientY / h - 0.5) * 2;
+            bg.style.transform = `translate3d(${x * 8}px, ${y * 6}px, 0)`;
+            orbs.forEach((orb, i) => {
+                const depth = (i + 1) * 6;
+                orb.style.transform = `translate3d(${ -x * depth }px, ${ -y * depth }px, 0)`;
+            });
+        }, { passive: true });
+    } catch (e) {
+        console.warn('Error initializing dashboard background parallax', e);
+    }
+}
+
+// Global utility functions for debugging/emergency use
+window.AgriSmartDebug = {
+    clearAllData: function() {
+        console.log('🚨 Clearing all AgriSmart data...');
+        StorageManager.logout();
+        console.log('✅ All data cleared. Reloading page...');
+        window.location.reload();
+    },
+    
+    showStoredData: function() {
+        console.log('📦 Current stored data:');
+        console.log('User:', StorageManager.getUser());
+        console.log('Token:', StorageManager.getToken() ? 'Present' : 'None');
+        console.log('Preferences:', JSON.parse(localStorage.getItem('agrismart_prefs') || '{}'));
+    }
+};
+
 function loadUserData() {
-    const userData = StorageManager.getUser();
+    let userData = StorageManager.getUser();
+
     if (userData) {
         updateUserInterface(userData);
         // Auto-sync with mobile if available
@@ -238,12 +286,19 @@ function initWeather() {
     
     if (searchBtn) {
         searchBtn.addEventListener('click', () => {
-            const location = locationInput.value;
+            const location = locationInput?.value || 'Default';
             fetchWeatherData(location);
         });
     }
     
-    fetchWeatherData('Default');
+    // Check if user is authenticated before fetching data
+    const userData = StorageManager.getUser();
+    if (userData) {
+        fetchWeatherData('Default');
+    } else {
+        // Show demo weather data if not logged in
+        showDemoWeatherData();
+    }
 }
 
 async function fetchWeatherData(location) {
@@ -253,9 +308,31 @@ async function fetchWeatherData(location) {
         const weatherData = await API.getWeather(location);
         displayWeather(weatherData);
     } catch (error) {
-        showAlert('Error fetching weather data. Please try again.', 'error');
-        hideLoading('weather-display');
+        console.error('Weather fetch error:', error);
+        showDemoWeatherData();
     }
+}
+
+function showDemoWeatherData() {
+    const demoData = {
+        location: 'Demo Location',
+        current: {
+            temperature: 28,
+            condition: 'Partly Cloudy',
+            humidity: 65,
+            windSpeed: 12
+        },
+        forecast: [
+            { date: 'Mon', condition: 'Sunny', temp: 30, rainfall: 0 },
+            { date: 'Tue', condition: 'Cloudy', temp: 26, rainfall: 2 },
+            { date: 'Wed', condition: 'Rainy', temp: 24, rainfall: 15 },
+            { date: 'Thu', condition: 'Sunny', temp: 29, rainfall: 0 },
+            { date: 'Fri', condition: 'Partly Cloudy', temp: 27, rainfall: 1 },
+            { date: 'Sat', condition: 'Thunderstorms', temp: 25, rainfall: 20 },
+            { date: 'Sun', condition: 'Sunny', temp: 31, rainfall: 0 }
+        ]
+    };
+    displayWeather(demoData);
 }
 
 function displayWeather(data) {
@@ -290,12 +367,19 @@ function initMarketPrices() {
     
     if (searchBtn) {
         searchBtn.addEventListener('click', () => {
-            const crop = cropSelect.value;
+            const crop = cropSelect?.value || 'wheat';
             fetchMarketPrices(crop);
         });
     }
     
-    fetchMarketPrices('wheat');
+    // Check if user is authenticated before fetching data
+    const userData = StorageManager.getUser();
+    if (userData) {
+        fetchMarketPrices('wheat');
+    } else {
+        // Show demo market data if not logged in
+        showDemoMarketData();
+    }
 }
 
 async function fetchMarketPrices(crop) {
@@ -305,9 +389,25 @@ async function fetchMarketPrices(crop) {
         const priceData = await API.getMarketPrices(crop);
         displayMarketPrices(priceData);
     } catch (error) {
-        showAlert('Error fetching market prices. Please try again.', 'error');
-        hideLoading('price-display');
+        console.error('Market price fetch error:', error);
+        showDemoMarketData(crop);
     }
+}
+
+function showDemoMarketData(crop = 'wheat') {
+    const demoData = {
+        crop: crop,
+        markets: [
+            { location: 'Mumbai APMC', price: 2450, change: 5.2, demand: 'High' },
+            { location: 'Delhi Azadpur', price: 2380, change: 3.8, demand: 'Medium' },
+            { location: 'Bangalore', price: 2420, change: 4.5, demand: 'High' },
+            { location: 'Kolkata', price: 2350, change: 2.1, demand: 'Medium' },
+            { location: 'Chennai', price: 2400, change: 3.9, demand: 'High' }
+        ],
+        avgPrice: 2400,
+        trend: 'upward'
+    };
+    displayMarketPrices(demoData);
 }
 
 function displayMarketPrices(data) {
@@ -645,3 +745,405 @@ function setupLoginForm() {
         }
     });
 }
+
+// ============================================
+// SETTINGS FUNCTIONALITY
+// ============================================
+
+function loadUserSettings() {
+    // Load swipe navigation settings
+    const swipeEnabled = StorageManager.getPreference('swipeNavigation', true);
+    const swipeLoop = StorageManager.getPreference('swipeLoop', false);
+    
+    const swipeToggle = document.getElementById('swipe-navigation-toggle');
+    const loopToggle = document.getElementById('swipe-loop-toggle');
+    
+    if (swipeToggle) {
+        swipeToggle.checked = swipeEnabled;
+    }
+    if (loopToggle) {
+        loopToggle.checked = swipeLoop;
+    }
+}
+
+function setupSettingsHandlers() {
+    // Swipe navigation toggle
+    const swipeToggle = document.getElementById('swipe-navigation-toggle');
+    if (swipeToggle) {
+        swipeToggle.addEventListener('change', function() {
+            SwipeNavigation.setEnabled(this.checked);
+            Notifications.show(
+                `Swipe navigation ${this.checked ? 'enabled' : 'disabled'}`, 
+                'success'
+            );
+        });
+    }
+    
+    // Swipe loop toggle
+    const loopToggle = document.getElementById('swipe-loop-toggle');
+    if (loopToggle) {
+        loopToggle.addEventListener('change', function() {
+            SwipeNavigation.setLoopEnabled(this.checked);
+            Notifications.show(
+                `Swipe loop ${this.checked ? 'enabled' : 'disabled'}`, 
+                'success'
+            );
+        });
+    }
+    
+    // Settings section navigation
+    const sectionButtons = document.querySelectorAll('.settings-menu button');
+    const sections = document.querySelectorAll('.settings-section');
+    
+    sectionButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetSection = this.getAttribute('data-section');
+            
+            // Remove active class from all buttons and sections
+            sectionButtons.forEach(btn => btn.classList.remove('active'));
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Add active class to clicked button and target section
+            this.classList.add('active');
+            const targetElement = document.getElementById(targetSection);
+            if (targetElement) {
+                targetElement.classList.add('active');
+            }
+        });
+    });
+}
+
+// ============================================
+// SWIPE NAVIGATION FUNCTIONALITY
+// ============================================
+
+const SwipeNavigation = {
+    // Define page navigation order
+    pageOrder: [
+        'index.html',
+        'dashboard.html',
+        'crop-recommendation.html',
+        'disease-detection.html',
+        'weather.html',
+        'market-price.html',
+        'chatbot.html',
+        'history.html',
+        'profile.html',
+        'settings.html'
+    ],
+
+    // Touch event variables
+    startX: 0,
+    startY: 0,
+    endX: 0,
+    endY: 0,
+    minSwipeDistance: 30, // Reduced minimum distance for easier triggering
+    maxVerticalDistance: 150, // Increased vertical tolerance
+    
+    // Initialize swipe navigation
+    init() {
+        console.log('🔍 Swipe Navigation Init Check:');
+        console.log('- Touch device:', this.isTouchDevice());
+        console.log('- Swipe enabled:', this.isSwipeEnabled());
+        console.log('- Force enable:', this.forceEnable);
+        
+        // Always initialize for now to test
+        this.addEventListeners();
+        console.log('🟢 Swipe navigation initialized (forced for testing)');
+    },
+    
+    // Check if device supports touch
+    isTouchDevice() {
+        return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    },
+    
+    // Check if swipe is enabled in settings
+    isSwipeEnabled() {
+        return StorageManager.getPreference('swipeNavigation', true);
+    },
+    
+    // Add touch and mouse event listeners
+    addEventListeners() {
+        // Store bound functions for proper removal
+        this.boundTouchStart = this.handleTouchStart.bind(this);
+        this.boundTouchMove = this.handleTouchMove.bind(this);
+        this.boundTouchEnd = this.handleTouchEnd.bind(this);
+        this.boundMouseStart = this.handleMouseStart.bind(this);
+        this.boundMouseMove = this.handleMouseMove.bind(this);
+        this.boundMouseEnd = this.handleMouseEnd.bind(this);
+
+        // touchmove must NOT be passive so we can preventDefault when horizontal swipe detected
+        document.addEventListener('touchstart', this.boundTouchStart, { passive: true });
+        document.addEventListener('touchmove', this.boundTouchMove, { passive: false });
+        document.addEventListener('touchend', this.boundTouchEnd, { passive: true });
+
+        // Also support mouse events for desktop testing
+        document.addEventListener('mousedown', this.boundMouseStart);
+        document.addEventListener('mousemove', this.boundMouseMove);
+        document.addEventListener('mouseup', this.boundMouseEnd);
+
+        this.eventsAdded = true;
+    },
+    
+    // Handle touch start
+    handleTouchStart(e) {
+        console.log('👆 Touch start detected');
+        if (e.touches.length === 1) {
+            const touch = e.touches[0];
+            this.startX = touch.clientX;
+            this.startY = touch.clientY;
+            this.endX = this.startX;
+            this.endY = this.startY;
+            this.swipeHandled = false;
+            console.log('Start position:', this.startX, this.startY);
+        }
+    },
+    
+    // Handle touch move - track movement and optionally trigger swipe immediately
+    handleTouchMove(e) {
+        if (!e.touches || e.touches.length !== 1) return;
+        const touch = e.touches[0];
+        this.endX = touch.clientX;
+        this.endY = touch.clientY;
+
+        const deltaX = this.endX - this.startX;
+        const deltaY = this.endY - this.startY;
+
+        // If horizontal swipe detected and not yet handled, trigger navigation and prevent scrolling
+        if (!this.swipeHandled && Math.abs(deltaX) >= this.minSwipeDistance && Math.abs(deltaY) <= this.maxVerticalDistance) {
+            this.swipeHandled = true;
+            // Prevent the browser from handling horizontal scroll/back gestures
+            try { e.preventDefault(); } catch (err) {}
+            console.log('🌀 Touch move triggered swipe:', deltaX, deltaY);
+            if (deltaX > 0) {
+                this.navigateToPreviousPage();
+            } else {
+                this.navigateToNextPage();
+            }
+        }
+    },
+    
+    // Handle touch end
+    handleTouchEnd(e) {
+        console.log('🤏 Touch end detected');
+        if (e.changedTouches.length === 1) {
+            const touch = e.changedTouches[0];
+            this.endX = touch.clientX;
+            this.endY = touch.clientY;
+            console.log('End position:', this.endX, this.endY);
+            this.processSwipe();
+        }
+    },
+    
+    // Handle mouse start (for desktop testing)
+    handleMouseStart(e) {
+        console.log('🖱️ Mouse down detected');
+        this.startX = e.clientX;
+        this.startY = e.clientY;
+        this.isMouseDown = true;
+        this.endX = this.startX;
+        this.endY = this.startY;
+        this.swipeHandled = false;
+        console.log('Start position:', this.startX, this.startY);
+    },
+    
+    // Handle mouse move (desktop testing)
+    handleMouseMove(e) {
+        if (!this.isMouseDown) return;
+        this.endX = e.clientX;
+        this.endY = e.clientY;
+
+        const deltaX = this.endX - this.startX;
+        const deltaY = this.endY - this.startY;
+
+        if (!this.swipeHandled && Math.abs(deltaX) >= this.minSwipeDistance && Math.abs(deltaY) <= this.maxVerticalDistance) {
+            this.swipeHandled = true;
+            console.log('🌀 Mouse move triggered swipe:', deltaX, deltaY);
+            if (deltaX > 0) {
+                this.navigateToPreviousPage();
+            } else {
+                this.navigateToNextPage();
+            }
+        }
+    },
+    
+    // Handle mouse end (for desktop testing)
+    handleMouseEnd(e) {
+        console.log('🖱️ Mouse up detected');
+        if (this.isMouseDown) {
+            this.endX = e.clientX;
+            this.endY = e.clientY;
+            console.log('End position:', this.endX, this.endY);
+            this.processSwipe();
+            this.isMouseDown = false;
+        }
+    },
+    
+    // Process the swipe gesture
+    processSwipe() {
+        const deltaX = this.endX - this.startX;
+        const deltaY = this.endY - this.startY;
+        
+        console.log('🔄 Processing swipe:');
+        console.log('- Delta X:', deltaX);
+        console.log('- Delta Y:', deltaY);
+        console.log('- Min distance:', this.minSwipeDistance);
+        console.log('- Max vertical:', this.maxVerticalDistance);
+        
+        // Check if it's a valid horizontal swipe
+        if (Math.abs(deltaX) >= this.minSwipeDistance && Math.abs(deltaY) <= this.maxVerticalDistance) {
+            console.log('✅ Valid swipe detected!');
+            if (deltaX > 0) {
+                // Swipe right - go to previous page
+                console.log('➡️ Swipe right - going to previous page');
+                this.navigateToPreviousPage();
+            } else {
+                // Swipe left - go to next page
+                console.log('⬅️ Swipe left - going to next page');
+                this.navigateToNextPage();
+            }
+        } else {
+            console.log('❌ Invalid swipe - not enough distance or too vertical');
+        }
+    },
+    
+    // Get current page index
+    getCurrentPageIndex() {
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        return this.pageOrder.indexOf(currentPage);
+    },
+    
+    // Navigate to previous page
+    navigateToPreviousPage() {
+        const currentIndex = this.getCurrentPageIndex();
+        if (currentIndex > 0) {
+            const previousPage = this.pageOrder[currentIndex - 1];
+            this.navigateToPage(previousPage, 'Previous');
+        } else {
+            // If at first page, optionally loop to last page
+            if (StorageManager.getPreference('swipeLoop', false)) {
+                const lastPage = this.pageOrder[this.pageOrder.length - 1];
+                this.navigateToPage(lastPage, 'Last');
+            } else {
+                this.showNavigationFeedback('Already at first page');
+            }
+        }
+    },
+    
+    // Navigate to next page
+    navigateToNextPage() {
+        const currentIndex = this.getCurrentPageIndex();
+        if (currentIndex < this.pageOrder.length - 1 && currentIndex !== -1) {
+            const nextPage = this.pageOrder[currentIndex + 1];
+            this.navigateToPage(nextPage, 'Next');
+        } else {
+            // If at last page, optionally loop to first page
+            if (StorageManager.getPreference('swipeLoop', false)) {
+                const firstPage = this.pageOrder[0];
+                this.navigateToPage(firstPage, 'First');
+            } else {
+                this.showNavigationFeedback('Already at last page');
+            }
+        }
+    },
+    
+    // Check if navigation requires authentication
+    requiresAuth(page) {
+        const authRequiredPages = ['dashboard.html', 'history.html', 'settings.html', 'profile.html'];
+        return authRequiredPages.includes(page);
+    },
+    
+    // Navigate to a specific page
+    navigateToPage(page, direction) {
+        // Check authentication if required
+        if (this.requiresAuth(page)) {
+            const user = StorageManager.getUser();
+            if (!user) {
+                this.showNavigationFeedback('Login required');
+                return;
+            }
+        }
+        
+        // Show navigation feedback
+        this.showNavigationFeedback(`${direction} page`);
+        
+        // Add transition effect
+        document.body.style.transition = 'opacity 0.3s ease';
+        document.body.style.opacity = '0.7';
+        
+        // Navigate after brief delay for visual feedback
+        setTimeout(() => {
+            window.location.href = page;
+        }, 150);
+    },
+    
+    // Show brief navigation feedback
+    showNavigationFeedback(message) {
+        // Remove existing feedback
+        const existingFeedback = document.getElementById('swipe-feedback');
+        if (existingFeedback) {
+            existingFeedback.remove();
+        }
+        
+        // Create feedback element
+        const feedback = document.createElement('div');
+        feedback.id = 'swipe-feedback';
+        feedback.textContent = message;
+        feedback.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(76, 175, 80, 0.9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        `;
+        
+        document.body.appendChild(feedback);
+        
+        // Fade out and remove
+        setTimeout(() => {
+            feedback.style.opacity = '0';
+            setTimeout(() => {
+                if (feedback.parentNode) {
+                    feedback.parentNode.removeChild(feedback);
+                }
+            }, 300);
+        }, 1500);
+    },
+    
+    // Enable/disable swipe navigation
+    setEnabled(enabled) {
+        StorageManager.setPreference('swipeNavigation', enabled);
+        if (enabled && !this.eventsAdded) {
+            this.addEventListeners();
+            this.eventsAdded = true;
+        } else if (!enabled && this.eventsAdded) {
+            this.removeEventListeners();
+            this.eventsAdded = false;
+        }
+        console.log(`🔄 Swipe navigation ${enabled ? 'enabled' : 'disabled'}`);
+    },
+    
+    // Remove event listeners
+    removeEventListeners() {
+        document.removeEventListener('touchstart', this.boundTouchStart);
+        document.removeEventListener('touchmove', this.boundTouchMove);
+        document.removeEventListener('touchend', this.boundTouchEnd);
+        document.removeEventListener('mousedown', this.boundMouseStart);
+        document.removeEventListener('mousemove', this.boundMouseMove);
+        document.removeEventListener('mouseup', this.boundMouseEnd);
+    },
+    
+    // Toggle loop navigation
+    setLoopEnabled(enabled) {
+        StorageManager.setPreference('swipeLoop', enabled);
+        console.log(`🔄 Swipe loop ${enabled ? 'enabled' : 'disabled'}`);
+    }
+};

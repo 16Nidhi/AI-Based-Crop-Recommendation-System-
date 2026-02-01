@@ -78,6 +78,12 @@ if (config.nodeEnv === 'development') {
 // Static files for uploads
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
+// Serve web application static files
+app.use('/app', express.static(path.join(__dirname, '../../web-app')));
+
+// Serve web application from root path
+app.use('/', express.static(path.join(__dirname, '../../web-app')));
+
 // Health check endpoint
 app.get('/health', (req, res) => {
     res.status(200).json({

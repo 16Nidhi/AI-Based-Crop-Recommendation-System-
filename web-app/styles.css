@@ -98,6 +98,42 @@
     --z-tooltip: 600;
 }
 
+/* Page-specific subtle palettes to give each page a tailored mood */
+body.page-crop {
+    --primary-500: #16a34a; /* green */
+    --accent-500: #f97316; /* orange accent */
+}
+
+body.page-chatbot {
+    --primary-500: #0ea5a4; /* teal */
+    --accent-500: #7c3aed; /* purple accent */
+}
+
+body.page-weather {
+    --primary-500: #0284c7; /* blue */
+    --accent-500: #06b6d4; /* cyan */
+}
+
+body.page-market {
+    --primary-500: #b45309; /* amber/brown */
+    --accent-500: #f97316; /* orange */
+}
+
+body.page-disease {
+    --primary-500: #c026d3; /* magenta */
+    --accent-500: #fb7185; /* pink accent */
+}
+
+body.page-profile,
+body.page-settings,
+body.page-history {
+    --primary-500: #166534; /* calm deep green */
+    --accent-500: #22c55e;
+}
+
+/* Small utility to keep page content centered and aligned */
+.page-content { max-width: 1100px; margin: 0 auto; }
+
 /* Reset & Base Styles */
 *, *::before, *::after {
     margin: 0;
@@ -141,6 +177,59 @@ body::before {
 @keyframes bgFloat {
     0%, 100% { opacity: 1; transform: scale(1); }
     50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+/* ============================================
+   Global subtle theme enhancements
+   Applied site-wide to give pages a unified modern look.
+   ============================================ */
+
+/* Soft rotating mesh overlay to add depth (low opacity for performance) */
+.mesh-overlay {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: conic-gradient(from 0deg at 50% 50%, rgba(34,197,94,0.02) 0deg, rgba(6,182,212,0.02) 90deg, rgba(168,85,247,0.02) 180deg, rgba(249,115,22,0.02) 270deg, rgba(34,197,94,0.02) 360deg);
+    opacity: 0.95;
+    transform-origin: center;
+    animation: meshSlowRotate 80s linear infinite;
+}
+
+@keyframes meshSlowRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Hero glass layer for non-dashboard pages */
+.hero.glass {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+/* Improve feature card hover across site */
+.feature-card {
+    transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s ease, border-color 0.35s ease;
+    will-change: transform;
+}
+
+.feature-card:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 18px 40px rgba(2,6,23,0.18), 0 0 30px rgba(34,197,94,0.05);
+    border-color: rgba(255,255,255,0.04);
+}
+
+/* Subtle button hover glow */
+.btn:hover {
+    box-shadow: 0 8px 24px rgba(2,6,23,0.12), 0 0 22px rgba(34,197,94,0.06);
+}
+
+/* Slightly darken footer on pages using the new theme */
+.footer.theme-dark {
+    background: linear-gradient(180deg, rgba(15,23,42,0.92), rgba(15,23,42,0.85));
+    border-top: 1px solid rgba(255,255,255,0.04);
 }
 
 /* Container */
@@ -303,7 +392,8 @@ body::before {
     position: relative;
     padding: var(--space-20) 0;
     overflow: hidden;
-    background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-800) 100%);
+    /* Teal gradient (fresh, modern) */
+    background: linear-gradient(135deg, #0ea5a4 0%, #028f8f 100%);
     color: white;
 }
 
@@ -345,9 +435,10 @@ body::before {
     align-items: center;
     gap: var(--space-2);
     padding: var(--space-2) var(--space-4);
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    color: white;
+    /* Teal-tinted badge for contrast with teal hero */
+    background: rgba(14, 165, 164, 0.14);
+    backdrop-filter: blur(8px);
+    color: #eaffff;
     font-size: 0.875rem;
     font-weight: 600;
     border-radius: var(--radius-full);
@@ -660,11 +751,13 @@ body::before {
 }
 
 /* ============================================
-   Stats Section
+   Stats Section (aligned with Dashboard palette)
    ============================================ */
 .stats {
     padding: var(--space-16) 0;
-    background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-800) 100%);
+    /* Use the site's primary/dashboard greens so stats visually match the dashboard */
+    background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
+    color: white;
     position: relative;
     overflow: hidden;
 }
@@ -676,8 +769,8 @@ body::before {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    opacity: 0.5;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.45;
 }
 
 .stats-grid {
@@ -707,8 +800,46 @@ body::before {
 
 .stat-item p {
     font-size: 1rem;
-    opacity: 0.9;
+    opacity: 0.95;
     font-weight: 500;
+}
+
+/* ============================================
+   CTA Section (use dashboard/accent palette for harmony)
+   ============================================ */
+.cta {
+    padding: var(--space-12) 0;
+    background: linear-gradient(135deg, var(--accent-500) 0%, var(--primary-600) 100%);
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-card {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+}
+
+.cta-content {
+    text-align: center;
+}
+
+.cta h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3.5vw, 2rem);
+    color: white;
+    margin-bottom: var(--space-3);
+}
+
+.cta p {
+    color: rgba(255,255,255,0.92);
+    margin-bottom: var(--space-6);
 }
 
 /* ============================================
@@ -963,7 +1094,8 @@ body::before {
     height: 450px;
     overflow-y: auto;
     padding: var(--space-6);
-    background: var(--gray-50);
+    background: var(--gray-100);
+    border-radius: var(--radius-lg);
 }
 
 .message {
@@ -1000,6 +1132,19 @@ body::before {
     border: 1px solid var(--gray-200);
     border-bottom-left-radius: var(--radius-sm);
     color: var(--gray-800);
+}
+
+/* Fallback styling for bot messages without message-bubble wrapper */
+.message.bot {
+    background: white;
+    padding: var(--space-4);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--gray-200);
+    color: var(--gray-800) !important;
+    max-width: 80%;
+    margin-bottom: var(--space-4);
+    line-height: 1.5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .message.user .message-bubble {
@@ -1343,6 +1488,160 @@ body::before {
 
 /* ============================================
    Dashboard Styles
+
+/* Reusable Dashboard Theme - apply via class `site-dashboard-theme` on <body> to give pages the dashboard color scheme and nav hero styles */
+.site-dashboard-theme {
+    color: #e2e8f0;
+    background: transparent;
+}
+
+.site-dashboard-theme .navbar {
+    background: rgba(15, 23, 42, 0.86);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.site-dashboard-theme .navbar.scrolled {
+    background: rgba(15,23,42,0.96);
+    box-shadow: 0 6px 28px rgba(0,0,0,0.35);
+}
+
+.site-dashboard-theme .logo { color: #f8fafc; }
+.site-dashboard-theme .nav-menu a { color: #94a3b8; }
+.site-dashboard-theme .nav-menu a:hover { color: #22c55e; background: rgba(34,197,94,0.08); }
+.site-dashboard-theme .nav-menu a.active { color: #22c55e; background: rgba(34,197,94,0.12); }
+.site-dashboard-theme .user-name { background: rgba(34,197,94,0.18); color: #86efac; padding: 0.25rem 0.5rem; border-radius: 6px; }
+.site-dashboard-theme .btn-login { color: #94a3b8; }
+.site-dashboard-theme .btn-login:hover { background: rgba(239,68,68,0.08); color: #fca5a5; }
+
+/* Apply darker hero look */
+.site-dashboard-theme .hero,
+.site-dashboard-theme .hero.glass {
+    background: linear-gradient(180deg, rgba(10,14,20,0.6), rgba(15,23,42,0.9));
+    color: #f8fafc;
+}
+
+.site-dashboard-theme .hero .container h1,
+.site-dashboard-theme .hero .container p {
+    color: #f8fafc;
+}
+
+.site-dashboard-theme .footer.theme-dark { background: linear-gradient(180deg, rgba(6,8,12,0.95), rgba(15,23,42,0.95)); }
+
+/* Page-specific dashboard backgrounds */
+.site-dashboard-theme.page-crop {
+    background: linear-gradient(180deg,#07361f 0%, #0f6a3a 100%);
+}
+
+/* Dashboard-style layered parallax background used on dashboard and other pages */
+.dashboard-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 10% 10%, rgba(34,197,94,0.06) 0%, transparent 20%),
+                radial-gradient(ellipse at 85% 85%, rgba(7,107,80,0.06) 0%, transparent 18%),
+                linear-gradient(180deg, rgba(4,10,16,0.3), rgba(2,6,23,0.6));
+    transform: translateZ(0);
+    overflow: hidden;
+}
+
+.dashboard-bg .mesh {
+    position: absolute;
+    inset: 0;
+    background: conic-gradient(from 0deg at 50% 50%, rgba(34,197,94,0.02) 0deg, rgba(6,182,212,0.02) 90deg, rgba(168,85,247,0.02) 180deg, rgba(249,115,22,0.02) 270deg, rgba(34,197,94,0.02) 360deg);
+    opacity: 0.6;
+    filter: blur(24px);
+    transform-origin: center;
+    animation: meshSlowRotate 120s linear infinite;
+}
+
+.dashboard-bg .orb {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.5;
+    mix-blend-mode: screen;
+}
+
+.dashboard-bg .orb.orb-a { background: radial-gradient(circle at 30% 30%, rgba(34,197,94,0.8), rgba(34,197,94,0.2)); left: -80px; top: -60px; }
+.dashboard-bg .orb.orb-b { background: radial-gradient(circle at 30% 30%, rgba(59,130,246,0.8), rgba(59,130,246,0.2)); right: -100px; top: 40px; width: 420px; height: 420px; }
+.dashboard-bg .orb.orb-c { background: radial-gradient(circle at 30% 30%, rgba(249,115,22,0.85), rgba(249,115,22,0.18)); left: 40%; bottom: -120px; width: 360px; height: 360px; }
+
+/* Disease detection page specific orbs */
+.page-disease .dashboard-bg .orb.orb-a { background: radial-gradient(circle at 30% 30%, rgba(71,85,105,0.6), rgba(71,85,105,0.2)); }
+.page-disease .dashboard-bg .orb.orb-b { background: radial-gradient(circle at 30% 30%, rgba(100,116,139,0.6), rgba(100,116,139,0.2)); }
+.page-disease .dashboard-bg .orb.orb-c { background: radial-gradient(circle at 30% 30%, rgba(51,65,85,0.7), rgba(51,65,85,0.2)); }
+
+@media (prefers-reduced-motion: reduce) {
+    .dashboard-bg .mesh,
+    .dashboard-bg .orb { animation: none; }
+}
+
+.site-dashboard-theme.page-chatbot {
+    background: linear-gradient(180deg,#042a2a 0%, #0d6b6b 100%);
+}
+
+.site-dashboard-theme.page-weather {
+    background: linear-gradient(180deg,#05223f 0%, #056aa4 100%);
+}
+
+.site-dashboard-theme.page-market {
+    background: linear-gradient(180deg,#3b1f05 0%, #b45309 100%);
+}
+
+.site-dashboard-theme.page-disease {
+    background: linear-gradient(180deg,#1e293b 0%, #334155 100%);
+}
+
+.site-dashboard-theme.page-profile,
+.site-dashboard-theme.page-settings,
+.site-dashboard-theme.page-history {
+    background: linear-gradient(180deg,#071a12 0%, #0b3b25 100%);
+}
+
+/* Glass card styles for readability on dark backgrounds */
+.site-dashboard-theme .result-card,
+.site-dashboard-theme .feature-card,
+.site-dashboard-theme .chatbot-container,
+.site-dashboard-theme .stats-grid .stat-item {
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 10px 30px rgba(2,6,23,0.5);
+    color: #f8fafc;
+}
+
+.site-dashboard-theme input,
+.site-dashboard-theme select,
+.site-dashboard-theme textarea {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    color: #f8fafc;
+}
+
+.site-dashboard-theme .btn-primary {
+    background: linear-gradient(90deg, var(--primary-500), var(--accent-500));
+    color: #fff;
+    border: none;
+}
+
+.site-dashboard-theme .feature-card p,
+.site-dashboard-theme .feature-card h3 {
+    color: #e6f7ee;
+}
+
+/* Subtle overlay to preserve readability */
+.site-dashboard-theme::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 10% 10%, rgba(255,255,255,0.02), transparent 20%);
+    pointer-events: none;
+    z-index: -1;
+}
    ============================================ */
 .dashboard-grid {
     display: grid;
@@ -1569,5 +1868,111 @@ body::before {
     
     .hero {
         padding: var(--space-4) 0;
+    }
+}
+
+/* ============================================
+   SWIPE NAVIGATION STYLES
+   ============================================ */
+
+/* Smooth page transitions for swipe navigation */
+body {
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Swipe feedback notification */
+#swipe-feedback {
+    pointer-events: none;
+    user-select: none;
+    animation: slideInFromTop 0.3s ease-out;
+}
+
+@keyframes slideInFromTop {
+    from {
+        transform: translate(-50%, -100%);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+}
+
+/* Visual indicator for swipe areas (optional, for debugging) */
+.swipe-indicator {
+    position: fixed;
+    top: 50%;
+    width: 30px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(76, 175, 80, 0.3);
+    border-radius: 15px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.swipe-indicator.left {
+    left: 10px;
+}
+
+.swipe-indicator.right {
+    right: 10px;
+}
+
+.swipe-indicator::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+}
+
+.swipe-indicator.left::before {
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 12px solid rgba(76, 175, 80, 0.6);
+}
+
+.swipe-indicator.right::before {
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 12px solid rgba(76, 175, 80, 0.6);
+}
+
+/* Show indicators on touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .swipe-indicator {
+        opacity: 0.7;
+    }
+    
+    .swipe-indicator:hover {
+        opacity: 1;
+    }
+}
+
+/* Disable text selection during swipe gestures */
+body.swiping {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+/* Enhanced mobile touch optimization */
+@media (max-width: 768px) {
+    body {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: none; /* Prevent browser back/forward on horizontal swipe */
+    }
+    
+    /* Slightly larger touch targets on mobile */
+    .swipe-indicator {
+        width: 40px;
+        height: 80px;
     }
 }
