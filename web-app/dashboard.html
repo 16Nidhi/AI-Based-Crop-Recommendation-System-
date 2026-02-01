@@ -782,8 +782,7 @@
     </style>
 </head>
 <body class="dashboard-page">
-    <!-- Version Banner (helps confirm updated UI) -->
-    <div id="dashboard-version-banner" aria-hidden="true" style="position:fixed;right:16px;top:16px;z-index:1000;background:rgba(0,0,0,0.45);color:#e6fffa;padding:8px 12px;border-radius:12px;font-weight:600;font-size:0.9rem;backdrop-filter:blur(6px);box-shadow:0 6px 18px rgba(2,6,23,0.5);">Dashboard v —</div>
+    <!-- Version Banner removed per UX request -->
     <!-- Parallax Background -->
     <div class="dashboard-parallax-wrapper">
         <div class="parallax-layer parallax-layer-1"></div>
@@ -1025,17 +1024,7 @@
     <script src="api.js"></script>
     <script src="main.js?v=20260131"></script>
     <script src="system-interconnection.js"></script>
-    <script>
-        // Populate the version banner with a timestamp so you can confirm this is the updated UI
-        (function() {
-            function pad(n){return n<10? '0'+n : n}
-            const el = document.getElementById('dashboard-version-banner');
-            if (!el) return;
-            const now = new Date();
-            const ts = now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate()) + ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes());
-            el.textContent = `Dashboard • updated ${ts}`;
-        })();
-    </script>
+    <!-- Version banner script removed -->
     <script>
         // Mobile menu toggle
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
