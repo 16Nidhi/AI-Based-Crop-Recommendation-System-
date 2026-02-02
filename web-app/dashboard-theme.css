@@ -1381,3 +1381,107 @@ html[data-reduced-motion='reduce'] .reveal-on-scroll { opacity: 1; transform: no
     background: linear-gradient(180deg, rgba(15,23,42,0.72), rgba(15,23,42,0.56));
     border-color: rgba(255,255,255,0.09);
 }
+
+/* Apply the upload-area glass gradient to common white panels on dashboard pages
+   This ensures chatbot, history, settings and profile sections match the upload look */
+.dashboard-theme .chatbot-container,
+.dashboard-theme .profile-section,
+.dashboard-theme .settings-content,
+.dashboard-theme .settings-sidebar,
+.dashboard-theme .history-item,
+.dashboard-theme .result-card,
+.dashboard-theme .history-filter .filter-btn,
+.dashboard-theme .settings-menu button {
+    background: linear-gradient(180deg, rgba(15,23,42,0.62), rgba(15,23,42,0.5)) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: rgba(226,232,240,0.95) !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    box-shadow: 0 20px 40px rgba(2,6,23,0.45) !important;
+    border-radius: var(--radius-xl) !important;
+}
+
+/* Small adjustments for elements that previously had bright borders */
+.dashboard-theme .history-item { border-left-color: rgba(34,197,94,0.18) !important; }
+.dashboard-theme .settings-menu button.active { background: rgba(34,197,94,0.16) !important; color: white !important; }
+
+/* Chat-specific overrides to replace light message bubbles and inputs */
+.dashboard-theme .chatbot-container .result-card {
+    background: linear-gradient(180deg, rgba(15,23,42,0.62), rgba(15,23,42,0.5)) !important;
+    padding: 0 !important;
+}
+
+.dashboard-theme .chatbot-container .chat-messages {
+    background: linear-gradient(180deg, rgba(15,23,42,0.62), rgba(15,23,42,0.5)) !important;
+    border-radius: var(--radius-lg) !important;
+    padding: var(--space-6) !important;
+    color: rgba(226,232,240,0.95) !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+.dashboard-theme .chatbot-container .message-bubble,
+.dashboard-theme .chatbot-container .message.bot .message-bubble,
+.dashboard-theme .chatbot-container .message.user .message-bubble {
+    background: rgba(255,255,255,0.06) !important;
+    color: rgba(226,232,240,0.95) !important;
+    border: 1px solid rgba(255,255,255,0.04) !important;
+    box-shadow: none !important;
+}
+
+.dashboard-theme .chatbot-container .message.user .message-bubble {
+    background: linear-gradient(135deg, rgba(34,197,94,0.95) 0%, rgba(6,182,212,0.9) 100%) !important;
+    color: white !important;
+}
+
+.dashboard-theme .chatbot-container .chat-input {
+    background: linear-gradient(180deg, rgba(15,23,42,0.58), rgba(15,23,42,0.46)) !important;
+    border-top: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+/* Override fallback .message wrappers that use whitesmoke in base styles */
+.dashboard-theme .chatbot-container .message,
+.dashboard-theme .chatbot-container .message.bot,
+.dashboard-theme .chatbot-container .message.user {
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    max-width: 100% !important;
+}
+
+/* Ensure the bubble itself is the visible element with dark translucent background */
+.dashboard-theme .chatbot-container .message .message-bubble {
+    display: inline-block !important;
+    background: rgba(255,255,255,0.06) !important;
+    color: rgba(226,232,240,0.95) !important;
+    border: 1px solid rgba(255,255,255,0.04) !important;
+    box-shadow: none !important;
+    padding: var(--space-4) !important;
+    border-radius: var(--radius-xl) !important;
+    max-width: 70% !important;
+}
+
+/* Replace the inline green header used in result-card first child with a teal gradient */
+.dashboard-theme .result-card > div:first-child,
+.dashboard-theme .chatbot-container .result-card > div:first-child {
+    /* Soft sage gradient - avoids pure white while staying gentle on the eyes */
+    background: linear-gradient(90deg, #eaf7ef 0%, #d7efe0 100%) !important;
+    color: var(--gray-900) !important;
+    border-bottom: 1px solid rgba(15,23,42,0.06) !important;
+    padding: 1rem !important;
+}
+
+/* Ensure header text inside that first child uses dark color (override earlier h3 rules) */
+.dashboard-theme .result-card > div:first-child h3,
+.dashboard-theme .chatbot-container .result-card > div:first-child h3 {
+    color: var(--gray-900) !important;
+    font-family: var(--font-display) !important;
+    margin: 0 !important;
+}
+
+.dashboard-theme .result-card > div:first-child p,
+.dashboard-theme .chatbot-container .result-card > div:first-child p {
+    color: rgba(17,24,39,0.9) !important;
+    margin: 0.5rem 0 0 0 !important;
+    font-size: 0.95rem !important;
+}
