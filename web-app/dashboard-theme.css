@@ -298,6 +298,53 @@
     animation: slideInUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s backwards;
 }
 
+/* Crop recommendation & generic hero tweaks (Option B: stylish highlight + underline) */
+.hero.glass h1,
+.hero .hero-headline {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.2rem, 4.2vw, 3.2rem);
+    line-height: 1.02;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+    max-width: 1100px;
+}
+
+.hero .highlight {
+    background: linear-gradient(90deg, #22c55e 0%, #06b6d4 50%, #a855f7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+    padding-bottom: 0.125rem;
+    display: inline-block;
+}
+
+.hero .highlight::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #22c55e 0%, #06b6d4 50%, #a855f7 100%);
+    bottom: -8px;
+    border-radius: 3px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 600ms cubic-bezier(0.2, 0.9, 0.3, 1);
+}
+
+/* Reveal underline on load and hover */
+.hero .highlight.revealed::after,
+.hero .highlight:hover::after {
+    transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero .highlight::after { transition: none; transform: none; }
+}
+
 /* ============================================
    HOMEPAGE GLASS SHELL LAYOUT
    ============================================ */
@@ -374,6 +421,8 @@
     max-width: 640px;
 }
 
+
+
 .dashboard-theme .glass-hero .hero-buttons .btn.btn-primary {
     background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
     box-shadow: 0 12px 32px rgba(34, 197, 94, 0.35);
@@ -419,8 +468,9 @@
 }
 
 .dashboard-theme .features .feature-card::before {
-    background: linear-gradient(90deg, #22c55e, #06b6d4, #a855f7, #f97316);
-    opacity: 0.9;
+    /* dashboard-specific accent bar (subtle) */
+    background: linear-gradient(90deg, rgba(34,197,94,0.9), rgba(6,182,212,0.85));
+    opacity: 0.08; /* keep subtle for dashboard panels */
 }
 
 .dashboard-theme .features .feature-card h3 {
@@ -525,6 +575,83 @@
 .dashboard-theme .cta .hero-buttons .btn.btn-secondary:hover {
     background: rgba(148, 163, 184, 0.22);
 }
+
+/* ============================================
+   MICRO-ANIMATIONS: HOVER STATES, REVEALS, SKELETONS, PAGE TRANSITIONS
+   ============================================ */
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .reveal-on-scroll,
+    .page-fade,
+    .skeleton,
+    .floating-orb,
+    .parallax-mesh {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Hover micro-interactions (use transform & shadow only) */
+.feature-card, .result-card, .stat-item, .cta-card, .welcome-card {
+    transition: transform 220ms cubic-bezier(0.2, 0.9, 0.3, 1), box-shadow 220ms ease, border-color 220ms ease;
+    will-change: transform;
+}
+
+.feature-card:hover, .result-card:hover, .stat-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 28px 60px rgba(2,6,23,0.48), 0 0 40px rgba(34,197,94,0.06);
+}
+
+.btn, .btn-primary, .btn-secondary {
+    transition: transform 140ms cubic-bezier(0.2,0.9,0.3,1), box-shadow 200ms ease;
+}
+
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+
+/* Reveal animation for cards as they enter viewport */
+.reveal-on-scroll { opacity: 0; transform: translateY(18px) scale(0.995); }
+@keyframes revealUp {
+    from { opacity: 0; transform: translateY(18px) scale(0.995); }
+    to { opacity: 1; transform: none; }
+}
+.reveal { animation: revealUp 640ms cubic-bezier(0.2,0.9,0.3,1) both; }
+
+/* Stagger helper for groups */
+.reveal-group > * { opacity: 0; }
+.reveal-group.revealed > * {
+    animation: revealUp 640ms cubic-bezier(0.2,0.9,0.3,1) both;
+}
+.reveal-group.revealed > *:nth-child(1) { animation-delay: 0s; }
+.reveal-group.revealed > *:nth-child(2) { animation-delay: 0.06s; }
+.reveal-group.revealed > *:nth-child(3) { animation-delay: 0.12s; }
+.reveal-group.revealed > *:nth-child(4) { animation-delay: 0.18s; }
+
+/* Loading skeletons */
+.skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.04) 100%); background-size: 200% 100%; border-radius: 6px; }
+@keyframes shimmer { from { background-position: 200% 0 } to { background-position: -200% 0 } }
+.skeleton.shimmer { animation: shimmer 1.2s linear infinite; }
+
+/* Page transition overlay */
+.page-fade { position: fixed; inset: 0; background: rgba(6,10,18,0.9); pointer-events: none; opacity: 0; transition: opacity 420ms ease; z-index: 9999; }
+.page-fade.active { opacity: 1; pointer-events: auto; }
+
+/* Small utility to reduce heavy shadows on mobile */
+@media (max-width: 640px) {
+    .feature-card:hover, .result-card:hover, .stat-item:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(2,6,23,0.35); }
+}
+
+/* Apply reveal-on-scroll by default to core components on homepage */
+.home-shell .feature-card,
+.home-shell .stat-item,
+.home-shell .result-card,
+.home-shell .cta-card,
+.home-shell .welcome-card { will-change: transform, opacity; }
+
+/* Accessibility: keep content readable when animation disabled */
+html[data-reduced-motion='reduce'] .reveal-on-scroll { opacity: 1; transform: none; }
+
 
 /* ============================================
    GLASS MORPHISM CARDS
@@ -726,6 +853,82 @@
     box-shadow: 
         0 20px 40px rgba(0, 0, 0, 0.3),
         0 0 60px rgba(34, 197, 94, 0.1);
+}
+
+/* Homepage-only interactive glow and hover (scoped and high-specificity) */
+.dashboard-theme.page-home .features .feature-card::before,
+.dashboard-theme.page-home .result-card::before,
+.dashboard-theme.page-home .stat-item::before,
+.dashboard-theme.page-home .cta-card::before,
+.dashboard-theme.page-home .welcome-card::before,
+.dashboard-theme.page-home .action-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* subtle green radial glow that follows mouse */
+    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(94,234,212,0.12) 0%, rgba(34,197,94,0.06) 14%, rgba(34,197,94,0.02) 30%, transparent 45%);
+    opacity: 0;
+    transition: opacity 320ms ease, transform 320ms ease;
+    pointer-events: none;
+    mix-blend-mode: screen;
+}
+
+.dashboard-theme.page-home .features .feature-card:hover::before,
+.dashboard-theme.page-home .result-card:hover::before,
+.dashboard-theme.page-home .stat-item:hover::before,
+.dashboard-theme.page-home .cta-card:hover::before,
+.dashboard-theme.page-home .welcome-card:hover::before,
+.dashboard-theme.page-home .action-card:hover::before {
+    opacity: 1;
+}
+
+/* Ensure homepage cards are positioned correctly for glow */
+.page-home .feature-card,
+.page-home .result-card,
+.page-home .stat-item,
+.page-home .cta-card,
+.page-home .welcome-card,
+.page-home .action-card {
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+    padding: clamp(1.25rem, 2.5vw, 2.25rem);
+    min-height: 220px;
+    line-height: 1.6;
+}
+
+/* Make stat cards slightly smaller on homepage to avoid large empty space */
+.dashboard-theme.page-home .stats .stat-item {
+    padding: clamp(0.75rem, 1.6vw, 1.25rem);
+    min-height: 130px;
+    border-radius: 1.25rem;
+}
+
+.dashboard-theme.page-home .stats .stat-item .stat-value {
+    font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+}
+
+.dashboard-theme.page-home .stats .stat-item p {
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Apply dashboard-like hover lift and glow intensity on homepage cards only */
+.page-home .feature-card:hover,
+.page-home .result-card:hover,
+.page-home .stat-item:hover,
+.page-home .cta-card:hover,
+.page-home .welcome-card:hover,
+.page-home .action-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 0 60px rgba(34, 197, 94, 0.08);
 }
 
 /* Different accent colors for each card */
@@ -1156,4 +1359,25 @@
     .action-card {
         transition: none;
     }
+}
+
+/* Upload area adjusted to match dashboard glass panels */
+.dashboard-theme .image-upload {
+    background: linear-gradient(180deg, rgba(15,23,42,0.62), rgba(15,23,42,0.5));
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: rgba(226,232,240,0.95);
+    border: 1px dashed rgba(255,255,255,0.06);
+    padding: clamp(1.5rem, 2.5vw, 3rem);
+    border-radius: var(--radius-lg);
+}
+
+.dashboard-theme .image-upload p,
+.dashboard-theme .image-upload .image-upload-icon {
+    color: rgba(226,232,240,0.9);
+}
+
+.dashboard-theme .image-upload:hover {
+    background: linear-gradient(180deg, rgba(15,23,42,0.72), rgba(15,23,42,0.56));
+    border-color: rgba(255,255,255,0.09);
 }

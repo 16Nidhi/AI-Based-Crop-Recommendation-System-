@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="styles.css?v=20260131">
     <link rel="stylesheet" href="dashboard-theme.css">
 </head>
-<body class="dashboard-theme">
+<body class="dashboard-theme page-home">
     <!-- Site Version Banner -->
 
     
@@ -26,6 +26,8 @@
         <div class="floating-orb orb-3"></div>
         <div class="crop-zone-map"></div>
     </div>
+    <!-- Page transition overlay -->
+    <div class="page-fade" id="page-fade" aria-hidden="true"></div>
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="container">
@@ -280,22 +282,18 @@
         });
         
         function checkAuthStatus() {
-            const user = StorageManager.getUser();
             const loginBtn = document.getElementById('login-btn');
             const logoutBtn = document.getElementById('logout-btn');
-            
-            if (user) {
-                if (loginBtn) loginBtn.style.display = 'none';
-                if (logoutBtn) {
-                    logoutBtn.style.display = 'block';
-                    logoutBtn.onclick = () => {
-                        StorageManager.clearUser();
-                        window.location.reload();
-                    };
-                }
-            } else {
-                if (loginBtn) loginBtn.style.display = 'block';
-                if (logoutBtn) logoutBtn.style.display = 'none';
+
+            // Simulate a logged-in state
+            console.log('Simulating logged-in state for testing');
+            if (loginBtn) loginBtn.style.display = 'none';
+            if (logoutBtn) {
+                logoutBtn.style.display = 'block';
+                logoutBtn.onclick = () => {
+                    console.log('Simulated logout');
+                    window.location.reload();
+                };
             }
         }
         

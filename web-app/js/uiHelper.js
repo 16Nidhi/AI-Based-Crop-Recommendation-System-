@@ -295,6 +295,89 @@ class UIHelperService {
                 });
             }
         });
+        // Initialize reveal-on-scroll for elements with .reveal-on-scroll
+        if ('IntersectionObserver' in window) {
+            const revealObserver = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        if (el.classList.contains('reveal-group')) {
+                            el.classList.add('revealed');
+                        } else {
+                            el.classList.add('reveal');
+                        }
+                        obs.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.12 });
+
+            document.querySelectorAll('.reveal-on-scroll, .reveal-group').forEach(n => revealObserver.observe(n));
+        } else {
+            // Fallback: reveal immediately
+            document.querySelectorAll('.reveal-on-scroll, .reveal-group').forEach(n => n.classList.add('reveal'));
+        }
+
+        // Page transition overlay: fade overlay, then navigate
+        const pageFade = document.getElementById('page-fade');
+        if (pageFade) {
+            document.addEventListener('click', (e) => {
+                const a = e.target.closest('a');
+                if (!a) return;
+                const href = a.getAttribute('href');
+                if (!href || href.startsWith('#') || a.target === '_blank') return;
+                // don't animate for same-page anchors
+                e.preventDefault();
+                pageFade.classList.add('active');
+                setTimeout(() => { window.location.href = href; }, 260);
+            }, { capture: true });
+
+            // Remove overlay on load
+            window.addEventListener('pageshow', () => { setTimeout(() => pageFade.classList.remove('active'), 120); });
+        }
+
+        // Interactive card mouse-follow glow: set --mouse-x/--mouse-y on cards
+        try {
+            // Ensure interactive card effects are scoped to homepage
+            const body = document.body;
+            if (body.classList.contains('page-home')) {
+                const cards = document.querySelectorAll('.page-home .feature-card');
+                cards.forEach((card) => {
+                    const update = (x, y) => {
+                        const rect = card.getBoundingClientRect();
+                        const offsetX = ((x - rect.left) / rect.width) * 100;
+                        const offsetY = ((y - rect.top) / rect.height) * 100;
+                        card.style.setProperty('--mouse-x', `${offsetX}%`);
+                        card.style.setProperty('--mouse-y', `${offsetY}%`);
+                    };
+
+                    let ticking = false;
+                    const onMove = (e) => {
+                        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                        if (!ticking) {
+                            window.requestAnimationFrame(() => {
+                                update(clientX, clientY);
+                                ticking = false;
+                            });
+                            ticking = true;
+                        }
+                    };
+
+                    card.addEventListener('mousemove', onMove);
+                    card.addEventListener('touchmove', onMove, { passive: true });
+                    card.addEventListener('mouseleave', () => {
+                        card.style.setProperty('--mouse-x', '50%');
+                        card.style.setProperty('--mouse-y', '50%');
+                    });
+                    card.addEventListener('touchend', () => {
+                        card.style.setProperty('--mouse-x', '50%');
+                        card.style.setProperty('--mouse-y', '50%');
+                    });
+                });
+            }
+        } catch (err) {
+            console.error('Interactive card glow init failed', err);
+        }
     }
 }
 

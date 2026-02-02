@@ -209,13 +209,13 @@ body::before {
     border-bottom: 1px solid rgba(255,255,255,0.03);
 }
 
-/* Improve feature card hover across site */
-.feature-card {
+/* Improve feature card hover across non-home pages */
+body:not(.page-home) .feature-card {
     transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s ease, border-color 0.35s ease;
     will-change: transform;
 }
 
-.feature-card:hover {
+body:not(.page-home) .feature-card:hover {
     transform: translateY(-8px) scale(1.01);
     box-shadow: 0 18px 40px rgba(2,6,23,0.18), 0 0 30px rgba(34,197,94,0.05);
     border-color: rgba(255,255,255,0.04);
@@ -684,6 +684,10 @@ body::before {
 }
 
 .feature-card {
+    /* Legacy site feature-card placeholder - scoped to non-home pages by earlier rules */
+}
+
+body:not(.page-home) .feature-card {
     position: relative;
     background: white;
     border-radius: var(--radius-xl);
@@ -695,7 +699,7 @@ body::before {
     text-align: left;
 }
 
-.feature-card::before {
+body:not(.page-home) .feature-card::before {
     content: '';
     position: absolute;
     top: 0;
@@ -708,17 +712,17 @@ body::before {
     transition: transform var(--transition-slow);
 }
 
-.feature-card:hover {
+body:not(.page-home) .feature-card:hover {
     transform: translateY(-8px);
     box-shadow: var(--shadow-xl), var(--shadow-glow);
     border-color: var(--primary-200);
 }
 
-.feature-card:hover::before {
+body:not(.page-home) .feature-card:hover::before {
     transform: scaleX(1);
 }
 
-.feature-icon {
+body:not(.page-home) .feature-icon {
     width: 64px;
     height: 64px;
     background: linear-gradient(135deg, var(--primary-100) 0%, var(--primary-50) 100%);
@@ -731,12 +735,12 @@ body::before {
     transition: all var(--transition);
 }
 
-.feature-card:hover .feature-icon {
+body:not(.page-home) .feature-card:hover .feature-icon {
     transform: scale(1.1) rotate(-5deg);
     background: linear-gradient(135deg, var(--primary-200) 0%, var(--primary-100) 100%);
 }
 
-.feature-card h3 {
+body:not(.page-home) .feature-card h3 {
     font-family: var(--font-display);
     font-size: 1.25rem;
     font-weight: 700;
@@ -744,7 +748,7 @@ body::before {
     margin-bottom: var(--space-3);
 }
 
-.feature-card p {
+body:not(.page-home) .feature-card p {
     color: var(--gray-600);
     margin-bottom: var(--space-5);
     line-height: 1.7;
@@ -1017,7 +1021,7 @@ body::before {
    Weather Card
    ============================================ */
 .weather-card {
-    background: white;
+    background: linear-gradient(155deg, rgba(15, 23, 42, 0.82) 0%, rgba(15, 23, 42, 0.65) 100%);;
     border-radius: var(--radius-xl);
     padding: var(--space-6);
     margin: var(--space-4) 0;
@@ -1036,9 +1040,10 @@ body::before {
    ============================================ */
 .price-table {
     width: 100%;
+    
     border-collapse: separate;
     border-spacing: 0;
-    background: white;
+    background: linear-gradient(155deg, rgba(15, 23, 42, 0.82) 0%, rgba(15, 23, 42, 0.65) 100%);;
     border-radius: var(--radius-xl);
     overflow: hidden;
     box-shadow: var(--shadow);
@@ -1058,16 +1063,16 @@ body::before {
 .price-table td {
     padding: var(--space-4) var(--space-5);
     border-bottom: 1px solid var(--gray-100);
-    color: var(--gray-700);
+    color: whitesmoke;
 }
 
 .price-table tr:last-child td {
     border-bottom: none;
 }
 
-.price-table tr:hover td {
+/* .price-table tr:hover td {
     background: var(--gray-50);
-}
+} */
 
 /* ============================================
    Chatbot Styles
@@ -1136,7 +1141,7 @@ body::before {
 
 /* Fallback styling for bot messages without message-bubble wrapper */
 .message.bot {
-    background: white;
+    background: whitesmoke;
     padding: var(--space-4);
     border-radius: var(--radius-lg);
     border: 1px solid var(--gray-200);
@@ -1149,7 +1154,7 @@ body::before {
 
 .message.user .message-bubble {
     background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
-    color: white;
+    color: whitesmoke;
     border-bottom-right-radius: var(--radius-sm);
     margin-left: auto;
 }
@@ -1159,7 +1164,7 @@ body::before {
     gap: var(--space-3);
     padding: var(--space-4);
     border-top: 1px solid var(--gray-200);
-    background: white;
+    background: whitesmoke;
 }
 
 .chat-input input {
@@ -1488,160 +1493,6 @@ body::before {
 
 /* ============================================
    Dashboard Styles
-
-/* Reusable Dashboard Theme - apply via class `site-dashboard-theme` on <body> to give pages the dashboard color scheme and nav hero styles */
-.site-dashboard-theme {
-    color: #e2e8f0;
-    background: transparent;
-}
-
-.site-dashboard-theme .navbar {
-    background: rgba(15, 23, 42, 0.86);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-
-.site-dashboard-theme .navbar.scrolled {
-    background: rgba(15,23,42,0.96);
-    box-shadow: 0 6px 28px rgba(0,0,0,0.35);
-}
-
-.site-dashboard-theme .logo { color: #f8fafc; }
-.site-dashboard-theme .nav-menu a { color: #94a3b8; }
-.site-dashboard-theme .nav-menu a:hover { color: #22c55e; background: rgba(34,197,94,0.08); }
-.site-dashboard-theme .nav-menu a.active { color: #22c55e; background: rgba(34,197,94,0.12); }
-.site-dashboard-theme .user-name { background: rgba(34,197,94,0.18); color: #86efac; padding: 0.25rem 0.5rem; border-radius: 6px; }
-.site-dashboard-theme .btn-login { color: #94a3b8; }
-.site-dashboard-theme .btn-login:hover { background: rgba(239,68,68,0.08); color: #fca5a5; }
-
-/* Apply darker hero look */
-.site-dashboard-theme .hero,
-.site-dashboard-theme .hero.glass {
-    background: linear-gradient(180deg, rgba(10,14,20,0.6), rgba(15,23,42,0.9));
-    color: #f8fafc;
-}
-
-.site-dashboard-theme .hero .container h1,
-.site-dashboard-theme .hero .container p {
-    color: #f8fafc;
-}
-
-.site-dashboard-theme .footer.theme-dark { background: linear-gradient(180deg, rgba(6,8,12,0.95), rgba(15,23,42,0.95)); }
-
-/* Page-specific dashboard backgrounds */
-.site-dashboard-theme.page-crop {
-    background: linear-gradient(180deg,#07361f 0%, #0f6a3a 100%);
-}
-
-/* Dashboard-style layered parallax background used on dashboard and other pages */
-.dashboard-bg {
-    position: fixed;
-    inset: 0;
-    z-index: -2;
-    pointer-events: none;
-    background: radial-gradient(ellipse at 10% 10%, rgba(34,197,94,0.06) 0%, transparent 20%),
-                radial-gradient(ellipse at 85% 85%, rgba(7,107,80,0.06) 0%, transparent 18%),
-                linear-gradient(180deg, rgba(4,10,16,0.3), rgba(2,6,23,0.6));
-    transform: translateZ(0);
-    overflow: hidden;
-}
-
-.dashboard-bg .mesh {
-    position: absolute;
-    inset: 0;
-    background: conic-gradient(from 0deg at 50% 50%, rgba(34,197,94,0.02) 0deg, rgba(6,182,212,0.02) 90deg, rgba(168,85,247,0.02) 180deg, rgba(249,115,22,0.02) 270deg, rgba(34,197,94,0.02) 360deg);
-    opacity: 0.6;
-    filter: blur(24px);
-    transform-origin: center;
-    animation: meshSlowRotate 120s linear infinite;
-}
-
-.dashboard-bg .orb {
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    filter: blur(60px);
-    opacity: 0.5;
-    mix-blend-mode: screen;
-}
-
-.dashboard-bg .orb.orb-a { background: radial-gradient(circle at 30% 30%, rgba(34,197,94,0.8), rgba(34,197,94,0.2)); left: -80px; top: -60px; }
-.dashboard-bg .orb.orb-b { background: radial-gradient(circle at 30% 30%, rgba(59,130,246,0.8), rgba(59,130,246,0.2)); right: -100px; top: 40px; width: 420px; height: 420px; }
-.dashboard-bg .orb.orb-c { background: radial-gradient(circle at 30% 30%, rgba(249,115,22,0.85), rgba(249,115,22,0.18)); left: 40%; bottom: -120px; width: 360px; height: 360px; }
-
-/* Disease detection page specific orbs */
-.page-disease .dashboard-bg .orb.orb-a { background: radial-gradient(circle at 30% 30%, rgba(71,85,105,0.6), rgba(71,85,105,0.2)); }
-.page-disease .dashboard-bg .orb.orb-b { background: radial-gradient(circle at 30% 30%, rgba(100,116,139,0.6), rgba(100,116,139,0.2)); }
-.page-disease .dashboard-bg .orb.orb-c { background: radial-gradient(circle at 30% 30%, rgba(51,65,85,0.7), rgba(51,65,85,0.2)); }
-
-@media (prefers-reduced-motion: reduce) {
-    .dashboard-bg .mesh,
-    .dashboard-bg .orb { animation: none; }
-}
-
-.site-dashboard-theme.page-chatbot {
-    background: linear-gradient(180deg,#042a2a 0%, #0d6b6b 100%);
-}
-
-.site-dashboard-theme.page-weather {
-    background: linear-gradient(180deg,#05223f 0%, #056aa4 100%);
-}
-
-.site-dashboard-theme.page-market {
-    background: linear-gradient(180deg,#3b1f05 0%, #b45309 100%);
-}
-
-.site-dashboard-theme.page-disease {
-    background: linear-gradient(180deg,#1e293b 0%, #334155 100%);
-}
-
-.site-dashboard-theme.page-profile,
-.site-dashboard-theme.page-settings,
-.site-dashboard-theme.page-history {
-    background: linear-gradient(180deg,#071a12 0%, #0b3b25 100%);
-}
-
-/* Glass card styles for readability on dark backgrounds */
-.site-dashboard-theme .result-card,
-.site-dashboard-theme .feature-card,
-.site-dashboard-theme .chatbot-container,
-.site-dashboard-theme .stats-grid .stat-item {
-    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-    border: 1px solid rgba(255,255,255,0.06);
-    box-shadow: 0 10px 30px rgba(2,6,23,0.5);
-    color: #f8fafc;
-}
-
-.site-dashboard-theme input,
-.site-dashboard-theme select,
-.site-dashboard-theme textarea {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.06);
-    color: #f8fafc;
-}
-
-.site-dashboard-theme .btn-primary {
-    background: linear-gradient(90deg, var(--primary-500), var(--accent-500));
-    color: #fff;
-    border: none;
-}
-
-.site-dashboard-theme .feature-card p,
-.site-dashboard-theme .feature-card h3 {
-    color: #e6f7ee;
-}
-
-/* Subtle overlay to preserve readability */
-.site-dashboard-theme::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(circle at 10% 10%, rgba(255,255,255,0.02), transparent 20%);
-    pointer-events: none;
-    z-index: -1;
-}
    ============================================ */
 .dashboard-grid {
     display: grid;
@@ -1802,7 +1653,7 @@ body::before {
         padding: 0 var(--space-4);
     }
     
-    .feature-card,
+    body:not(.page-home) .feature-card,
     .dashboard-card,
     .auth-card {
         padding: var(--space-5);
